@@ -20,6 +20,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dc8130d337591474f917d7c4ec6f28d9
+    m_Address: Datas/PlayerAnimatorHash
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 73de300114678b146b7da7737a502c40, type: 2}
   m_SchemaSet:

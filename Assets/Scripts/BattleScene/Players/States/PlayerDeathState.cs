@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Player
 {
-    public class PlayerDeathState : StateMachineBase<PlayerController>
+    public class PlayerDeathState : PlayerStateMachineBase<PlayerController>
     {
         public PlayerDeathState(PlayerController controller) : base(controller) { }
 

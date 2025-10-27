@@ -2,12 +2,11 @@ using UnityEngine;
 
 namespace Game.Player
 {
-    public class PlayerIdleState : StateMachineBase<PlayerController>
+    public class PlayerIdleState : PlayerStateMachineBase<PlayerController>
     {
         public PlayerIdleState(PlayerController controller) : base(controller) { }
         public override void OnEnter()
         {
-            
         }
 
         public override void OnExit()
@@ -16,8 +15,11 @@ namespace Game.Player
 
         public override void OnUpdate()
         {
-            controller.ChangeState(controller.PlayerMoveState);
+           var key = InputManager.GetKey();
+           if(key != PressedKey.None)  controller.ChangeState(controller._playerWalkState);
         }
+
+        public override void Initialize() { }
     }
 }
 
