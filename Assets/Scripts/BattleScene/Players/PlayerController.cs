@@ -44,6 +44,8 @@ namespace Game.Player
             _playerWalkState = new PlayerWalkState(this);
             _playerAttackState = new PlayerAttackState(this);
             _playerDeathState = new PlayerDeathState(this);
+
+            animator.SetBool(animatorHash.attackHash, true);//å„Ç≈è¡ÇµÇƒÇÀ
         }
         public void ChangeState(PlayerStateMachineBase<PlayerController> nextState)
         {
