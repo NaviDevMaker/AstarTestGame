@@ -5,11 +5,11 @@ namespace Game.Player
 {
     public interface IPlayer<TPlayer> where TPlayer : MonoBehaviour, IPlayer<TPlayer>
     {
-        int GetHash(PlayerStateMachineBase<TPlayer> stateMachineBase);
+        (int hash,string clipName) GetAnimInfo(PlayerStateMachineBase<TPlayer> stateMachineBase);
     }
     public class PlayerController : MonoBehaviour,IAssetSetter,IPlayer<PlayerController>
     {
-        public AnimatorHash animatorHash { get; private set; }
+        public AnimationData animationData { get; private set; }
         public PlayerIdleState _playerIdleState { get; private set;}
         public PlayerWalkState _playerWalkState { get; private set;}
         public PlayerAttackState _playerAttackState { get; private set; }
@@ -19,16 +19,18 @@ namespace Game.Player
 
         public PlayerStatusData playerStatusData { get; private set;}
         public Animator animator { get; private set; }
+
+        public bool isDead { get; private set; }
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         async void Start()
         {
             await GetAsset();
             Initialize();
         }
-
         // Update is called once per frame
         void Update()
         {
+            if (InputManager.AttackButtonPressed()) _playerAttackState.Attack();
             currentState?.OnUpdate();
         }
         void Initialize()
@@ -37,15 +39,12 @@ namespace Game.Player
             StateSetup();
             ChangeState(_playerIdleState);
         }
-
         void StateSetup()
         {
             _playerIdleState = new PlayerIdleState(this);
             _playerWalkState = new PlayerWalkState(this);
             _playerAttackState = new PlayerAttackState(this);
             _playerDeathState = new PlayerDeathState(this);
-
-            animator.SetBool(animatorHash.attackHash, true);//å„Ç≈è¡ÇµÇƒÇÀ
         }
         public void ChangeState(PlayerStateMachineBase<PlayerController> nextState)
         {
@@ -56,19 +55,18 @@ namespace Game.Player
         public async UniTask GetAsset()
         {
             var statusData = await GetAssetsMethods.GetAsset<PlayerStatusData>("Datas/PlayerStatusData");
-            var hashData = await GetAssetsMethods.GetAsset<AnimatorHash>("Datas/PlayerAnimatorHash");
-            if (statusData == null || hashData == null) throw new System.Exception();
+            var animData = await GetAssetsMethods.GetAsset<AnimationData>("Datas/PlayerAnimationData");
+            if (statusData == null || animData == null) throw new System.Exception();
             playerStatusData = statusData;
-            animatorHash = hashData;
+            animationData = animData;
         }
-
-        public int GetHash(PlayerStateMachineBase<PlayerController> stateMachineBase)
+        public (int hash,string clipName) GetAnimInfo(PlayerStateMachineBase<PlayerController> stateMachineBase)
         {
             return stateMachineBase switch
             {
-                PlayerWalkState => animatorHash.walkHash,
-                PlayerAttackState => animatorHash.attackHash,
-                PlayerDeathState => animatorHash.deathHash,
+                PlayerWalkState => (animationData.WalkHash,animationData.WalkClipName),
+                PlayerAttackState => (animationData.AttackHash,animationData.AttackClipName),
+                PlayerDeathState => (animationData.DeathHash,animationData.DeathClipName),
                 _ => default
             };
         }

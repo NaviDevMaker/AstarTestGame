@@ -10,6 +10,8 @@ public static class InputManager
         if (Input.GetKey(KeyCode.D)) return PressedKey.Right;
         return PressedKey.None;
     }
+
+    public static bool AttackButtonPressed() => Input.GetMouseButtonDown(0);
 }
 
 public enum PressedKey

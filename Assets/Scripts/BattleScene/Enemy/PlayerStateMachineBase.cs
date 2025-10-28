@@ -11,12 +11,15 @@ namespace Game.Player
         }
 
         protected int animatorHash { get; private set; }
+        protected string animationClipName { get; private set;}
         public TPlayer controller { get; private set; }
         public PlayerStateMachineBase<TPlayer> nextState { get; protected set; }
         public virtual void Initialize()
         {
-            Debug.Log($"{this},{controller.GetHash(this)}");
-            this.animatorHash = controller.GetHash(this);
+            Debug.Log($"{this},{controller.GetAnimInfo(this)}");
+            var info = controller.GetAnimInfo(this);
+            this.animatorHash = info.hash;
+            this.animationClipName = info.clipName;
         }
         public abstract void OnEnter();
         public abstract void OnUpdate();

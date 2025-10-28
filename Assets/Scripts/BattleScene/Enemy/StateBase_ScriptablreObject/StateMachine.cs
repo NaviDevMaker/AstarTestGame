@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class StateMachine
 {
-    StateBase currentState;
+    public StateBase currentState { get; private set;}
     public EnemyIdleStateBase IdleState { get; private set;}
     public EnemyMoveStateBase MoveState { get; private set;}
 
@@ -30,6 +30,10 @@ public class StateMachine
         currentState = nextState;
         currentState?.OnEnter();
     }
-
+    public void ChangeToDeathState()
+    {
+        if (currentState == DeathState) return;
+        ChangeState(DeathState);
+    }
     public void Update() => currentState?.OnUpdate();
 }

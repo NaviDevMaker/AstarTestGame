@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4611b86f4c6f3324b9e2dfe183533b14, type: 3}
   m_Name: PlayerStatusData
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 7
   life: 0
   rotateSpeed: 10

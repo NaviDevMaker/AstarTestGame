@@ -21,7 +21,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dc8130d337591474f917d7c4ec6f28d9
-    m_Address: Datas/PlayerAnimatorHash
+    m_Address: Datas/PlayerAnimationData
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
