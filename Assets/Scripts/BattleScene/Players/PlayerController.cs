@@ -17,10 +17,12 @@ namespace Game.Player
 
         PlayerStateMachineBase<PlayerController> currentState = null;
 
-        public PlayerStatusData playerStatusData { get; private set;}
+        [SerializeField] PlayerStatusData statusData;
+        public PlayerStatusData playerStatusData => statusData;
         public Animator animator { get; private set; }
 
         public bool isDead { get; private set; }
+        public IEnemy currentTarget { get; set;}
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         async void Start()
         {
@@ -30,6 +32,7 @@ namespace Game.Player
         // Update is called once per frame
         void Update()
         {
+            Debug.Log(currentTarget);
             if (InputManager.AttackButtonPressed()) _playerAttackState.Attack();
             currentState?.OnUpdate();
         }
@@ -54,10 +57,8 @@ namespace Game.Player
         }
         public async UniTask GetAsset()
         {
-            var statusData = await GetAssetsMethods.GetAsset<PlayerStatusData>("Datas/PlayerStatusData");
             var animData = await GetAssetsMethods.GetAsset<AnimationData>("Datas/PlayerAnimationData");
             if (statusData == null || animData == null) throw new System.Exception();
-            playerStatusData = statusData;
             animationData = animData;
         }
         public (int hash,string clipName) GetAnimInfo(PlayerStateMachineBase<PlayerController> stateMachineBase)

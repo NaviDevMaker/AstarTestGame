@@ -5,16 +5,15 @@ public class EnemyDeathStateBase : StateBase
 {
     public override void OnEnter()
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"Ž€–S,{owner.owerObj.name}");
+        UnityEngine.Object.Destroy(owner.owerObj);
     }
 
     public override void OnExit()
     {
-        throw new System.NotImplementedException();
     }
 
     public override void OnUpdate()
     {
-        throw new System.NotImplementedException();
     }
 }

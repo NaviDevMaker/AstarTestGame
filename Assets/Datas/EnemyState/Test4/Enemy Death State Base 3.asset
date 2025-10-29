@@ -9,11 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4611b86f4c6f3324b9e2dfe183533b14, type: 3}
-  m_Name: PlayerStatusData
+  m_Script: {fileID: 11500000, guid: 74a5d55235c5bbc448b03fb4681811b8, type: 3}
+  m_Name: Enemy Death State Base 3
   m_EditorClassIdentifier: 
-  moveSpeed: 7
-  life: 0
-  rotateSpeed: 15
-  detectRange: 1.5
-  attackEndFrame: 15

@@ -15,8 +15,23 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: ce11530945330ff43a0de7b6c270dd2f
   m_SerializeEntries:
+  - m_GUID: 10f9d1112123e604183f5d5a60d827b3
+    m_Address: Animations/Homeless/Idle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2d419d3ae5c140b429cd4321572fa66d
     m_Address: Datas/PlayerStatusData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7649063e303719149993eb5e159cd0d3
+    m_Address: Animations/Homeless/Walk
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dc4d977aea5d5894f83149712819f5a4
+    m_Address: Animations/Homeless/Attack
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

@@ -8,9 +8,9 @@ public class StateMachine
 
     public EnemyDeathStateBase DeathState { get; private set;}
 
-    GameObject owner;
+    IEnemy owner;
     Animator animator;
-    public StateMachine(GameObject owner,Animator animator,
+    public StateMachine(IEnemy owner,Animator animator,
                       EnemyIdleStateBase idleState,EnemyMoveStateBase moveState,EnemyDeathStateBase deathState)
     {
         this.owner = owner;
@@ -32,7 +32,8 @@ public class StateMachine
     }
     public void ChangeToDeathState()
     {
-        if (currentState == DeathState) return;
+        //if (currentState == DeathState) return;
+        Debug.Log("Ž€‹Ž", owner.owerObj);
         ChangeState(DeathState);
     }
     public void Update() => currentState?.OnUpdate();

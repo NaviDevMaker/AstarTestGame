@@ -4,4 +4,6 @@ public static class Layers
 {
     public static int wallLayer => LayerMask.GetMask("Wall");
     public static int groundLayer => LayerMask.GetMask("Ground");
+
+    public static int enemyLayer => LayerMask.GetMask("Enemy");
 }

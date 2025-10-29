@@ -3,9 +3,9 @@ using UnityEngine;
 public abstract class StateBase : ScriptableObject
 {
     protected StateMachine stateMachine;
-    protected GameObject owner;
+    protected IEnemy owner;
     protected Animator animator;
-    public virtual void Initialize(StateMachine stateMachine,GameObject owner,Animator animator)
+    public virtual void Initialize(StateMachine stateMachine,IEnemy owner,Animator animator)
     {
         this.stateMachine = stateMachine;
         this.owner = owner;

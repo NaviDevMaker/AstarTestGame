@@ -16,7 +16,7 @@ namespace Game.Player
             {PressedKey.Right,Vector3.right},
             {PressedKey.Left,Vector3.left}
         };
-
+        int targetMask = -1;
         public override void OnEnter()
         {
             nextState = controller._playerIdleState;
@@ -63,12 +63,14 @@ namespace Game.Player
             base.Initialize();
             moveSpeed = controller.playerStatusData.MoveSpeed;
             rotateSpeed = controller.playerStatusData.RotateSpeed;
+            targetMask = Layers.enemyLayer | Layers.wallLayer;
         }
         bool IsWalkable(Vector3 direction)
         {
             var rayDistance = moveSpeed * Time.deltaTime;
             var pos = controller.transform.position;
-            if (Physics.Raycast(pos, direction, rayDistance, Layers.wallLayer)) return false;
+           
+            if(Physics.Raycast(pos, direction, rayDistance, targetMask)) return false;
             return true;
         }
     }
