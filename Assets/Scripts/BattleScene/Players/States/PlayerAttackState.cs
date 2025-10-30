@@ -46,7 +46,7 @@ namespace Game.Player
                     {
                         Debug.Log("taosu");
                         controller.currentTarget.OnDeadAction?.Invoke();
-                        //controller.currentTarget = null;
+                        controller.currentTarget = null;
                         break;
                     }
                     await UniTask.Yield(cancellationToken: token);
