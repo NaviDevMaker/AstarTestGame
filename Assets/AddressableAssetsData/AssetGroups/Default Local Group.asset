@@ -25,6 +25,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 46a02c419531270468638cfb8813d618
+    m_Address: Prefabs/LifeImage
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7649063e303719149993eb5e159cd0d3
     m_Address: Animations/Homeless/Walk
     m_ReadOnly: 0

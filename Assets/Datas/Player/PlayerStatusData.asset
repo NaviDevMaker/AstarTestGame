@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerStatusData
   m_EditorClassIdentifier: 
   moveSpeed: 7
-  life: 0
+  life: 5
   rotateSpeed: 15
   detectRange: 1.5
   attackEndFrame: 15

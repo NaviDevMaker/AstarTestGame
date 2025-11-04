@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using System;
 namespace Game.Player
 {
@@ -20,9 +21,10 @@ namespace Game.Player
         [SerializeField] PlayerStatusData statusData;
         public PlayerStatusData playerStatusData => statusData;
         public Animator animator { get; private set; }
-
         public bool isDead { get; private set; }
         public IEnemy currentTarget { get; set;}
+
+        public UnityAction OnHitEnemy;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         async void Start()
         {
