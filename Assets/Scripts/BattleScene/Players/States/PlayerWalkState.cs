@@ -9,6 +9,7 @@ namespace Game.Player
         public PlayerWalkState(PlayerController controller) : base(controller) { }
         float moveSpeed = 0f;
         float rotateSpeed = 0f;
+        public Vector3 perTargetPos { get; private set;}
         readonly Dictionary<PressedKey, Vector3> directionDic = new Dictionary<PressedKey, Vector3>
         {
             {PressedKey.Foward,Vector3.forward},
@@ -55,8 +56,8 @@ namespace Game.Player
                 );
             var currentPos = controller.transform.position;
             var targetPos = currentPos + direction * moveSpeed * Time.deltaTime;
-            var move = Vector3.MoveTowards(currentPos, targetPos, moveSpeed * Time.deltaTime);
-            controller.transform.position = move;
+            perTargetPos = Vector3.MoveTowards(currentPos, targetPos, moveSpeed * Time.deltaTime);
+            controller.transform.position = perTargetPos;
         }   
         public override void Initialize()
         {

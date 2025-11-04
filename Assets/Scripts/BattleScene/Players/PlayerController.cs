@@ -25,6 +25,7 @@ namespace Game.Player
         public IEnemy currentTarget { get; set;}
 
         public UnityAction OnHitEnemy;
+        public UnityAction OnRestoreLife;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         async void Start()
         {
@@ -38,6 +39,10 @@ namespace Game.Player
             if (InputManager.AttackButtonPressed()) _playerAttackState.Attack();
             currentState?.OnUpdate();
         }
+        private void LateUpdate()
+        {
+            
+        }
         void Initialize()
         {
             animator = GetComponentInChildren<Animator>();
@@ -50,6 +55,18 @@ namespace Game.Player
             _playerWalkState = new PlayerWalkState(this);
             _playerAttackState = new PlayerAttackState(this);
             _playerDeathState = new PlayerDeathState(this);
+        }
+        bool CanPickUpItem()
+        {
+            var targetPos = _playerWalkState.perTargetPos;
+            var forward = transform.forward;
+            var toTarget = (targetPos - transform.position).normalized;
+            forward.y = 0f;
+            toTarget.y = 0f;
+            var dot = Vector3.Dot(forward, toTarget);
+            var pickUpAngle = playerStatusData.PickUpAngle;
+            var thereHold = Mathf.Cos(pickUpAngle * 0.5f * Mathf.Deg2Rad);
+            return dot >= thereHold;
         }
         public void ChangeState(PlayerStateMachineBase<PlayerController> nextState)
         {
