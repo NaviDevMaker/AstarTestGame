@@ -35,6 +35,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b7eab32f7a8e73e4ca522ad10701fa67
+    m_Address: Datas/ItemData/ItemMoveSetting
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dc4d977aea5d5894f83149712819f5a4
     m_Address: Animations/Homeless/Attack
     m_ReadOnly: 0

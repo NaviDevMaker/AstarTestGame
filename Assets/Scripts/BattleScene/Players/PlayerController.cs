@@ -1,7 +1,8 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
-using System;
+using Game.Item;
+using System.Linq;
 namespace Game.Player
 {
     public interface IPlayer<TPlayer> where TPlayer : MonoBehaviour, IPlayer<TPlayer>
@@ -16,6 +17,7 @@ namespace Game.Player
         public PlayerAttackState _playerAttackState { get; private set; }
         public PlayerDeathState _playerDeathState { get; private set;}
 
+        public PlayerItemPickUpState _playerItemPickUpState { get; private set;}
         PlayerStateMachineBase<PlayerController> currentState = null;
 
         [SerializeField] PlayerStatusData statusData;
@@ -25,8 +27,10 @@ namespace Game.Player
         public IEnemy currentTarget { get; set;}
 
         public UnityAction OnHitEnemy;
-        public UnityAction OnRestoreLife;
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+        public int currentLife { get; set;}
+            
+       // Start is called once before the first execution of Update after the MonoBehaviour is created
         async void Start()
         {
             await GetAsset();
@@ -37,6 +41,7 @@ namespace Game.Player
         {
             Debug.Log(currentTarget);
             if (InputManager.AttackButtonPressed()) _playerAttackState.Attack();
+            if (InputManager.PickUpItemButtonPressed()) _playerItemPickUpState.TryPickUpItem();
             currentState?.OnUpdate();
         }
         private void LateUpdate()
@@ -55,19 +60,13 @@ namespace Game.Player
             _playerWalkState = new PlayerWalkState(this);
             _playerAttackState = new PlayerAttackState(this);
             _playerDeathState = new PlayerDeathState(this);
+            _playerItemPickUpState = new PlayerItemPickUpState(this);
         }
-        bool CanPickUpItem()
+        void PlayerSetUp()
         {
-            var targetPos = _playerWalkState.perTargetPos;
-            var forward = transform.forward;
-            var toTarget = (targetPos - transform.position).normalized;
-            forward.y = 0f;
-            toTarget.y = 0f;
-            var dot = Vector3.Dot(forward, toTarget);
-            var pickUpAngle = playerStatusData.PickUpAngle;
-            var thereHold = Mathf.Cos(pickUpAngle * 0.5f * Mathf.Deg2Rad);
-            return dot >= thereHold;
+            currentLife = playerStatusData.Life;
         }
+       
         public void ChangeState(PlayerStateMachineBase<PlayerController> nextState)
         {
             currentState?.OnExit();
@@ -89,6 +88,12 @@ namespace Game.Player
                 PlayerDeathState => (animationData.DeathHash,animationData.DeathClipName),
                 _ => default
             };
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, statusData.PickUpRadius);
         }
     }
 }

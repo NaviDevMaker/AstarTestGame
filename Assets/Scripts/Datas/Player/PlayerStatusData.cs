@@ -6,6 +6,7 @@ public class PlayerStatusData :StatusData
     [SerializeField] int life;
     [Header("Action Infomation")]
     [SerializeField] float pickUpAngle;
+    [SerializeField] float pickUpRadius;
     [SerializeField] float rotateSpeed;
     [SerializeField] float detectRange;
     [SerializeField] int attackEndFrame;
@@ -17,4 +18,6 @@ public class PlayerStatusData :StatusData
     public int AttackEndFrame => attackEndFrame;
 
     public float PickUpAngle  => pickUpAngle;
+
+    public float PickUpRadius  => pickUpRadius;
 } 
