@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 7
   life: 5
+  attackAngle: 30
   pickUpAngle: 90
   pickUpRadius: 2
   rotateSpeed: 15

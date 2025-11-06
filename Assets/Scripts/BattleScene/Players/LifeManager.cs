@@ -57,7 +57,7 @@ namespace Game.Player
             }
         }
         void SetSprite(Image image, Sprite newSprite) => image.sprite = newSprite;
-        async void ChangeLife(bool isReducing)
+        async UniTask ChangeLife(bool isReducing)
         {
             var values = lifeDic.Values.ToList();
             var index = isReducing ? values.FindLastIndex(v => v)
@@ -98,8 +98,8 @@ namespace Game.Player
             var scaleSet = new Vector3TweenSetup(targetScale, duration);
             return targetImage.gameObject.Scaler(scaleSet).ToUniTask(cancellationToken:cts.Token);
         }
-        void ReduceLife() => ChangeLife(true);
-        public void RestoreLife() => ChangeLife(false);
+        void ReduceLife() => ChangeLife(true).Forget();
+        public void RestoreLife() => ChangeLife(false).Forget();
     }
 }
 

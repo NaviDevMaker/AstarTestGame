@@ -33,6 +33,7 @@ namespace Game.Player
             foreach (var hit in sortedHits)
             {
                 if (!hit.TryGetComponent<IPickupedItem>(out var pickupedItem)) continue;
+                if (pickupedItem.isPicked) continue;
                 var closestPoint = hit.ClosestPoint(origin);
                 if (!CanPickUpItem(closestPoint)) continue;
                 var toTarget = closestPoint - origin;

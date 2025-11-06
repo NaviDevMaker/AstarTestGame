@@ -21,7 +21,7 @@ namespace Game.Player
             layerIndex = controller.animationData.AttackLayerIndex;
             attackbleNorTime = await GetAttackableNormalizeTime();
         }
-        public async void Attack()
+        public async UniTask Attack()
         {
             if (isAttacking) return;
             var token = controller.GetCancellationTokenOnDestroy();

@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72ba30b515f6c46479ec29e4ce7a2822, type: 3}
   m_Name: ItemMoveSetting
   m_EditorClassIdentifier: 
-  moveSpeed: 0
-  moveForwardOffset: 0
-  upOffset: 0
-  downOffset: 0
+  moveSpeed: 25
+  rotateSpeed: 5
+  floatSpeed: 5
+  upOffset: 3
+  furtherUpOffset: 3
+  downOffset: 5
+  floatOffset: 0.5
+  rotateDuration: 1

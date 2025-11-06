@@ -8,20 +8,23 @@ public class TargetManager : MonoBehaviour
     {
         public PlayerController _player { get; set; }
         public float detectRange { get; set; }
+        public float thereHold { get; set; }
     }
     PlayerInfo playerInfo;
     public static TargetManager Instance { get; private set; }
-    float therehold = 0.94f;//20“xˆÈ“à
     private void Awake() => Instance = this;
 
     private void Start() => Initialize();
 
     void Initialize()
     {
+        var attackAngle = player.playerStatusData.AttackAngle;
+        var thereHold = Mathf.Cos(attackAngle * 0.5f * Mathf.Deg2Rad);
         playerInfo = new PlayerInfo
         {
             _player = this.player,
-            detectRange = player.playerStatusData.DetectRange
+            detectRange = player.playerStatusData.DetectRange,
+            thereHold = thereHold
         };
     }
     public void SetCurrentTarget(IEnemy targetEnemy)
@@ -72,7 +75,7 @@ public class TargetManager : MonoBehaviour
         closest.y = 0f;
         var toEnemy = (closest - flatPlayerPos).normalized;
         var dot = Vector3.Dot(playerFoward, toEnemy);
-        return dot > therehold;
+        return dot >= playerInfo.thereHold;
     }
     Vector3 GetFlatPosition(Vector3 position)
     {

@@ -40,7 +40,7 @@ namespace Game.Player
         void Update()
         {
             Debug.Log(currentTarget);
-            if (InputManager.AttackButtonPressed()) _playerAttackState.Attack();
+            if (InputManager.AttackButtonPressed()) _playerAttackState.Attack().Forget();
             if (InputManager.PickUpItemButtonPressed()) _playerItemPickUpState.TryPickUpItem();
             currentState?.OnUpdate();
         }
