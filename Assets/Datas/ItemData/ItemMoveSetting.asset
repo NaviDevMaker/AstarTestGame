@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72ba30b515f6c46479ec29e4ce7a2822, type: 3}
   m_Name: ItemMoveSetting
   m_EditorClassIdentifier: 
-  moveSpeed: 25
+  moveSpeed: 50
   rotateSpeed: 5
-  floatSpeed: 5
+  floatSpeed: 10
   upOffset: 3
   furtherUpOffset: 3
   downOffset: 5

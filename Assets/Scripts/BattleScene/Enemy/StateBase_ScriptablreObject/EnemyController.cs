@@ -14,6 +14,7 @@ public interface IEnemy
 
 public class EnemyController : MonoBehaviour, IEnemy
 {
+    [SerializeField] EnemyStatusData enemyStatusData;
     [SerializeField] EnemyIdleStateBase idleState;
     [SerializeField] EnemyMoveStateBase moveState;
     [SerializeField] EnemyDeathStateBase deathState;
@@ -24,6 +25,7 @@ public class EnemyController : MonoBehaviour, IEnemy
     public GameObject owerObj => this.gameObject;
 
     public Collider enemyCollider { get; private set;}
+    public EnemyStatusData EnemyStatusData  => enemyStatusData;
 
     void Start()
     {
@@ -38,7 +40,7 @@ public class EnemyController : MonoBehaviour, IEnemy
     void Initialize()
     {
         var animator = GetComponent<Animator>();
-        enemyCollider = GetComponent<Collider>();
+        enemyCollider = GetComponentInChildren<Collider>();
         stateMachine = new StateMachine(this, animator, idleState, moveState, deathState);
         OnDeadAction = stateMachine.ChangeToDeathState;
         stateMachine.ChangeState(idleState);

@@ -11,7 +11,7 @@ public static class InputManager
         return PressedKey.None;
     }
     public static bool AttackButtonPressed() => Input.GetMouseButtonDown(0);
-    public static bool PickUpItemButtonPressed() => Input.GetMouseButton(2);
+    public static bool PickUpItemButtonPressed() => Input.GetMouseButtonDown(2);
 }
 
 public enum PressedKey

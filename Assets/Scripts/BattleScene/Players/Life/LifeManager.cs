@@ -98,7 +98,7 @@ namespace Game.Player
             var scaleSet = new Vector3TweenSetup(targetScale, duration);
             return targetImage.gameObject.Scaler(scaleSet).ToUniTask(cancellationToken:cts.Token);
         }
-        void ReduceLife() => ChangeLife(true).Forget();
+        public void ReduceLife() => ChangeLife(true).Forget();
         public void RestoreLife() => ChangeLife(false).Forget();
     }
 }

@@ -89,7 +89,6 @@ namespace Game.Item
         }
         async UniTask RotateItem()
         {
-
             Debug.Log(itemMoveSetting);
             var duraion = itemMoveSetting.RotateDuration;
             var targetRot = new Vector3(0f, 360f, 0f);
@@ -102,7 +101,6 @@ namespace Game.Item
             try { await rotateTask;}
             catch (OperationCanceledException) { }
         }
-
         async UniTask FloatItem()
         {
             Debug.Log(itemMoveSetting);

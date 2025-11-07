@@ -1,13 +1,20 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
+
+public interface IAnimatorLayer
+{ 
+    int layerIndex { get; }
+    void LayerSet();
+}
+
 namespace Game.Player
 {
-    public class PlayerAttackState : PlayerStateMachineBase<PlayerController>
+    public class PlayerAttackState : PlayerStateMachineBase<PlayerController>,IAnimatorLayer
     {
         public PlayerAttackState(PlayerController controller) : base(controller) { }
 
-        int layerIndex = 0;
+        public int layerIndex { get; private set;}
         float attackbleNorTime = 0f;
         public bool isAttacking { get; private set; } = false;
         public override void OnEnter() { }
@@ -18,7 +25,7 @@ namespace Game.Player
         public async override void Initialize()
         {
             base.Initialize();
-            layerIndex = controller.animationData.AttackLayerIndex;
+            LayerSet();
             attackbleNorTime = await GetAttackableNormalizeTime();
         }
         public async UniTask Attack()
@@ -28,6 +35,7 @@ namespace Game.Player
             try
             {
                 isAttacking = true;
+                controller.SetHashToFalse();
                 controller.animator.Play(animationClipName);
                 controller.animator.SetBool(animatorHash, true);
                 Func<bool> waitAttackAnim =  () =>
@@ -73,6 +81,8 @@ namespace Game.Player
             var attackEndFrame = controller.playerStatusData.AttackEndFrame;
             return attackEndFrame / maxFrame;
         }
+
+        public void LayerSet() => layerIndex = controller.animationData.AttackLayerIndex;
     }
 }
 

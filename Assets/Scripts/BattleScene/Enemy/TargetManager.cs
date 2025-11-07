@@ -32,9 +32,9 @@ public class TargetManager : MonoBehaviour
         var player = playerInfo._player;
         var currentTarget = player.currentTarget;
         Debug.Log(IsTargetable(targetEnemy));
-        if (!IsTargetable(targetEnemy) && currentTarget == targetEnemy)
+        if (!IsTargetable(targetEnemy))
         {
-            player.currentTarget = null;
+            if(currentTarget == targetEnemy) player.currentTarget = null;
             return;
         }
         Debug.Log("ターゲットに設定します", gameObject);
@@ -65,16 +65,14 @@ public class TargetManager : MonoBehaviour
         var playerFoward = player.transform.forward;
         playerFoward.y = 0f;
         playerFoward.Normalize();//ｙを０にした時点で長さが１のベクトルじゃなくなるから必要
-        //var flatPlayerPos = GetFlatPosition(player.transform.position);
-        //var closestPoint = enemy.enemyCollider.ClosestPoint(flatPlayerPos);
-        //var flatEnemyPos = GetFlatPosition(closestPoint);
-        //var toEnemy = (flatEnemyPos - flatPlayerPos).normalized;
+        //方向の判定に傾きは考慮しないからyを0にする
         var flatPlayerPos = player.transform.position;
         flatPlayerPos.y = 0f;
         var closest = enemy.enemyCollider.ClosestPoint(flatPlayerPos);
         closest.y = 0f;
         var toEnemy = (closest - flatPlayerPos).normalized;
         var dot = Vector3.Dot(playerFoward, toEnemy);
+        //Debug.Log($"thereHold: {playerInfo.thereHold}, dot: {dot}");
         return dot >= playerInfo.thereHold;
     }
     Vector3 GetFlatPosition(Vector3 position)

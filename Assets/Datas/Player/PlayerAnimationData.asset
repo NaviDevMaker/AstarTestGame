@@ -14,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkHashName: isWalking
   attackHashName: isAttacking
+  pickUpHashName: isPickingItem
   deathHashName: isDead
   walkClipName: Walk
   attackClipName: Attack
+  pickUpClipName: PickUpItem
   deathClipName: Death
   baseLayerIndex: 0
   attackLayerIndex: 1
+  pickUpLayerIndex: 2
