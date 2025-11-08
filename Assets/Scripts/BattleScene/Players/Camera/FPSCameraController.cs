@@ -10,7 +10,6 @@ namespace Game.Player
     {
         [Header("Duration")]
         [SerializeField] float duration;
-        [SerializeField] float rotateDuration;
 
         [Header("Shake Info")]
         [SerializeField] float strength;
@@ -41,14 +40,17 @@ namespace Game.Player
             player.OnHitEnemyAction += ShakeCamera;
             player.OnDeadAction += RotateCamera;
         }
-        async void RotateCamera()
+        async UniTask RotateCamera(float rotateDuration)
         {
-            var targetRot = new Vector3(-90f, 0f, 0f);
-            var rotateSet = new Vector3TweenSetup(targetRot, rotateDuration);
-            var rotateTask = transform.gameObject.Roter(rotateSet)
-                             .ToUniTask(cancellationToken: this.GetCancellationTokenOnDestroy());
-            try { await rotateTask; }
-            catch (OperationCanceledException) { }
+            //return async() =>
+            //{
+                var targetRot = new Vector3(-90f, 0f, 0f);
+                var rotateSet = new Vector3TweenSetup(targetRot, rotateDuration);
+                var rotateTask = transform.gameObject.Roter(rotateSet)
+                                 .ToUniTask(cancellationToken: this.GetCancellationTokenOnDestroy());
+                try { await rotateTask; }
+                catch (OperationCanceledException) { throw; }
+            //};        
         }
     }
 }

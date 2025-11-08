@@ -3,16 +3,16 @@ using UnityEngine;
 using UnityEngine.Events;
 using Game.Item;
 using System.Linq;
-
+using System;
 
 
 namespace Game.Player
 {
     public interface IPlayer<TPlayer> : IDamageable where TPlayer : MonoBehaviour, IPlayer<TPlayer>
     {
-        (int hash,string clipName) GetAnimInfo(PlayerStateMachineBase<TPlayer> stateMachineBase);
+        (int hash,string clipName,float length) GetAnimInfo(PlayerStateMachineBase<TPlayer> stateMachineBase);
         UnityAction OnHitEnemyAction { get; set;}
-        UnityAction OnDeadAction { get; set;}
+        Func<float,UniTask> OnDeadAction { get; set;}
         bool isDead { get;}
         bool isInvincible { get; set;}
     }
@@ -36,7 +36,7 @@ namespace Game.Player
         public UnityAction OnHitEnemyAction { get; set;}
         public int currentLife { get; set;}
         public bool isInvincible { get; set;}
-        public UnityAction OnDeadAction { get; set; }
+        public Func<float,UniTask>OnDeadAction { get; set; }
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         async void Start()
@@ -91,22 +91,18 @@ namespace Game.Player
             if (statusData == null || animData == null) throw new System.Exception();
             animationData = animData;
         }
-        public (int hash,string clipName) GetAnimInfo(PlayerStateMachineBase<PlayerController> stateMachineBase)
+        public (int hash,string clipName,float length) GetAnimInfo(PlayerStateMachineBase<PlayerController> stateMachineBase)
         {
             return stateMachineBase switch
             {
-                PlayerWalkState => (animationData.WalkHash,animationData.WalkClipName),
-                PlayerAttackState => (animationData.AttackHash,animationData.AttackClipName),
-                PlayerItemPickUpState => (animationData.PickUpHash,animationData.PickUpClipName),
-                PlayerDeathState => (animationData.DeathHash,animationData.DeathClipName),
+                PlayerWalkState => (animationData.WalkHash,animationData.WalkClipName,animator.GetControllerLength(animationData.WalkClipName)),
+                PlayerAttackState => (animationData.AttackHash,animationData.AttackClipName,animator.GetControllerLength(animationData.AttackClipName)),
+                PlayerItemPickUpState => (animationData.PickUpHash,animationData.PickUpClipName,animator.GetControllerLength(animationData.PickUpClipName)),
+                PlayerDeathState => (animationData.DeathHash,animationData.DeathClipName,animator.GetControllerLength(animationData.DeathClipName)),
                 _ => default
             };
         }
-        void DeathAction()
-        {
-            ChangeState(_playerDeathState);
-            OnDeadAction?.Invoke();
-        }
+        void DeathAction() => ChangeState(_playerDeathState);
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;

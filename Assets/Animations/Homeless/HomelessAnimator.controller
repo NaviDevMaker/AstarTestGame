@@ -307,7 +307,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PickUpItem
-  m_Speed: 8
+  m_Speed: 9.566668
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6082324523498297750}
