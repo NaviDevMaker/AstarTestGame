@@ -26,8 +26,9 @@ namespace Game.Player
             shakeCts = new CancellationTokenSource();
             try
             {
-                var tween = transform.DOShakePosition(duration, strength, vibrato, randomness);
-                var shakeTask = tween.ToUniTask(cancellationToken: shakeCts.Token);
+                var shakeSet = new ShakeSet(duration,strength,vibrato,randomness);
+                var shakeTween = gameObject.Shaker(shakeSet);
+                var shakeTask = shakeTween.ToUniTask(cancellationToken:shakeCts.Token);
                 await shakeTask;
             }
             catch (OperationCanceledException) { }
@@ -41,16 +42,13 @@ namespace Game.Player
             player.OnDeadAction += RotateCamera;
         }
         async UniTask RotateCamera(float rotateDuration)
-        {
-            //return async() =>
-            //{
-                var targetRot = new Vector3(-90f, 0f, 0f);
-                var rotateSet = new Vector3TweenSetup(targetRot, rotateDuration);
-                var rotateTask = transform.gameObject.Roter(rotateSet)
-                                 .ToUniTask(cancellationToken: this.GetCancellationTokenOnDestroy());
-                try { await rotateTask; }
-                catch (OperationCanceledException) { throw; }
-            //};        
+        {          
+             var targetRot = new Vector3(-90f, 0f, 0f);
+             var rotateSet = new Vector3TweenSetup(targetRot, rotateDuration);
+             var rotateTask = transform.gameObject.Roter(rotateSet,isLocal:true)
+                              .ToUniTask(cancellationToken: this.GetCancellationTokenOnDestroy());
+             try { await rotateTask; }
+             catch (OperationCanceledException) { throw; }      
         }
     }
 }

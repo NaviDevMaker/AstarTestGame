@@ -3636,10 +3636,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   duration: 1
-  rotateDuration: 2
   strength: 1
   vibrato: 30
-  randomness: 90
+  randomness: 0
 --- !u!1 &2127822255
 GameObject:
   m_ObjectHideFlags: 0

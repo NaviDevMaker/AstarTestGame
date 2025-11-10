@@ -25,12 +25,15 @@ public class AnimationSpeedSetter : EditorWindow
         public int spcContLavelWidth = 170;
         public int spcContFieldWidth = 200;
         public int boxHeight = 20;
+        public int helpBoxHeight = 30;
+        public int helpBoxWidth = 200;
         public int columnSpace = 5;
         public int rowSpace = 2;
-        public int helpBoxSpace = 1400;
+        //public int helpBoxSpace = 1400;
     }
 
     static RectInfo rectInfo;
+    Vector2 scrollPos = Vector2.zero;
     public readonly string[] options = { "All", "Specific" };
     List<ClipInfo> clipInfos = new();
     [MenuItem("Tools/Animation Speed Setter")]
@@ -41,8 +44,11 @@ public class AnimationSpeedSetter : EditorWindow
     }
     private void OnGUI()
     {
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos,alwaysShowHorizontal:true,alwaysShowVertical:true);
         for (int i = 0; i < clipInfos.Count; i++)
         {
+            GUIStyle style = new GUIStyle(GUI.skin.label);
+            style.fontSize = 10;
             GUILayout.Space(rectInfo.columnSpace);
             EditorGUILayout.BeginHorizontal(GUI.skin.box,GUILayout.Height(rectInfo.boxHeight));
             var info = clipInfos[i];
@@ -77,16 +83,17 @@ public class AnimationSpeedSetter : EditorWindow
             }
 
             GUILayout.Space(rectInfo.columnSpace);
-            var helpBoxSpace = options[info.selectedIndex] == "Specific"
-                                                           ? rectInfo.helpBoxSpace - (rectInfo.spcContLavelWidth + rectInfo.spcContFieldWidth)
-                                                           : rectInfo.helpBoxSpace;
-            if (info.animationClip == null)
-            {
-                GUILayout.Space(helpBoxSpace);
-                EditorGUILayout.HelpBox("Please set an animationClip !!", MessageType.Warning);
-            }
+            //var helpBoxSpace = options[info.selectedIndex] == "Specific"
+            //                                               ? rectInfo.helpBoxSpace - (rectInfo.spcContLavelWidth + rectInfo.spcContFieldWidth)
+            //                                               : rectInfo.helpBoxSpace;
            
             EditorGUILayout.EndHorizontal();
+            if (info.animationClip == null)
+            {
+                //EditorGUILayout.HelpBox‚Ì’†g‚Í‚±‚Ì“ñ‚Â‚Åì‚ç‚ê‚Ä‚¢‚é‚ç‚µ‚¢
+                var rect = EditorGUILayout.GetControlRect(false,rectInfo.helpBoxHeight,GUILayout.Width(rectInfo.helpBoxWidth));
+                EditorGUI.HelpBox(rect, "Please set an animationClip !!", MessageType.Warning);
+            }
         }
 
         GUILayout.Space(rectInfo.rowSpace);
@@ -105,6 +112,8 @@ public class AnimationSpeedSetter : EditorWindow
                 );
             if(isAcceped) foreach (var clipInfo in clipInfos) ApplySpeeds(clipInfo);
         }
+
+        EditorGUILayout.EndScrollView();
     }
     void ApplySpeeds(ClipInfo clipInfo)
     {

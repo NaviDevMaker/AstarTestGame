@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,6 +45,23 @@ public struct FadeSet
     }
 }
 
+public struct ShakeSet
+{ 
+    public float duration { get; set; }
+    public float strength { get; set; }
+    public int vibrato { get; set; }
+    public float randomness { get; set; }
+
+    public ShakeSet(float duration,float strength,int vibrato,float randomness)
+    {
+        this.duration = duration;
+        this.strength = strength;
+        this.vibrato = vibrato;
+        this.randomness = randomness;
+    }
+}
+
+
 public static class ObjectTweenFunctions
 {
     public static Tween Scaler(this GameObject origin, Vector3TweenSetup tweenSetup)
@@ -77,12 +93,14 @@ public static class ObjectTweenFunctions
         return tween;
     }
     public static Tween Roter(this GameObject origin, Vector3TweenSetup tweenSetup
-                             , RotateMode rotateMode = RotateMode.Fast)
+                             , RotateMode rotateMode = RotateMode.Fast,bool isLocal = false)
     {
         var duration = tweenSetup.duration;
         var endValue = tweenSetup.endValue;
         var ease = tweenSetup.ease;
-        var tween = origin.transform.DORotate(endValue, duration, rotateMode).SetEase(ease);
+        var tween = !isLocal
+                    ? origin.transform.DORotate(endValue, duration, rotateMode).SetEase(ease)
+                    : origin.transform.DOLocalRotate(endValue, duration, rotateMode).SetEase(ease);
         return tween;
     }
 
@@ -95,4 +113,15 @@ public static class ObjectTweenFunctions
         return tween;
     }
 
+    public static Tween Shaker(this GameObject origin,ShakeSet shakeSet
+                              ,ShakeRandomnessMode shakeRandomnessMode = ShakeRandomnessMode.Full)
+    {
+        var duration = shakeSet.duration;
+        var strength = shakeSet.strength;
+        var vibrato = shakeSet.vibrato;
+        var randomness = shakeSet.randomness;
+        var tween = origin.transform.DOShakePosition(duration, strength, vibrato,randomness
+                                                    ,false,true);
+        return tween;
+    }
 }
