@@ -4,6 +4,7 @@ public class BattleManager : MonoBehaviour
 {
     [SerializeField] PosaitionSetUper positionSetuper;
     [SerializeField] CameraMover cameraMover;
+    [SerializeField] StageGenerator stageGenerator;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -23,5 +24,6 @@ public class BattleManager : MonoBehaviour
         var playerTra = player.transform;
         positionSetuper.Initialize(playerTra);
         cameraMover.Initialize(playerTra);
+        stageGenerator.Initialize();
     }
 }
