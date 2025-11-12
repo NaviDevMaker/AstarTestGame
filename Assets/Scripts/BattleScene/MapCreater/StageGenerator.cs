@@ -25,7 +25,7 @@ public class StageGenerator : MonoBehaviour
     private int[,] map;                           // マップの管理配列
 
     [SerializeField] private int roomNum;       // 部屋の数
-    private int roomMin = 10;                   // 生成する部屋の最小値
+    private int roomMin = 10;                   // 生成する部屋の最小値,これは部屋の幅、高さの最小値
     private int parentNum = 0;                  // 分割する部屋番号
     private int max = 0;                        // 最大面積
     private int roomCount;                      // 部屋カウント
@@ -49,6 +49,7 @@ public class StageGenerator : MonoBehaviour
     {
         ground = 0,
         wall = 1,
+
         road = 2,
     }
 
@@ -107,36 +108,32 @@ public class StageGenerator : MonoBehaviour
         mapObjects = new GameObject[] { ground, wall, road };
     }
 
-    private void MapGenerate()
+    //イメージは大きな図形を分解してるイメージ、だからまだ実際の位置は未確定
+    void SplitedRoomSetup()
     {
-        initPrefab();
-
         // 部屋（StartX、StartY、幅、高さ）
         roomStatus = new int[System.Enum.GetNames(typeof(RoomStatus)).Length, roomNum];
 
-        // フロア設定
-        map = new int[mapSizeW, mapSizeH];
-
-        // フロアの初期化
-        for (int nowW = 0; nowW < mapSizeW; nowW++)
-        {
-            for (int nowH = 0; nowH < mapSizeH; nowH++)
-            {
-                // 壁を貼る
-                map[nowW, nowH] = 2;
-            }
-        }
+        
 
         // フロアを入れる
-        roomStatus[(int)RoomStatus.x, roomCount] = 0;
-        roomStatus[(int)RoomStatus.y, roomCount] = 0;
-        roomStatus[(int)RoomStatus.w, roomCount] = mapSizeW;
-        roomStatus[(int)RoomStatus.h, roomCount] = mapSizeH;
+        //roomCountは最初は０(まだ何も生成されてないから)で初期化、ここで部屋一つ目の生成
+        roomStatus[(int)RoomStatus.x, roomCount] = 0;　//x座標
+        roomStatus[(int)RoomStatus.y, roomCount] = 0;　//y座標
+        roomStatus[(int)RoomStatus.w, roomCount] = mapSizeW;　//部屋の横幅
+        roomStatus[(int)RoomStatus.h, roomCount] = mapSizeH;　//部屋の縦幅
 
         // カウント追加
+        //初期化（一つ目の部屋の生成）したのでroomCountをインクリメント
         roomCount++;
 
+        //例（一番最初の場合)
+        //width,heightがともに１００（terrainのサイズのwidth,lengthがともに100の時）に、当然ほかのインデックスの各値（RoomStateの各要素）には
+        //何も入ってないので、maxに100×100の面積10000が入り、parentNumにも１が代入される
+        //SplitPointでその親となる部屋のwidthとheightを渡す、そして値の大きな方(辺の長い方)をRandom.rangeの値をもとに分割する座標(line)を取得する
+        //生成予定の部屋(roomCount)が分割した際の左側になるように値を入れる①
         // 部屋の数だけ分割する
+        //splitNumは分割した回数
         for (int splitNum = 0; splitNum < roomNum - 1; splitNum++)
         {
             // 変数初期化
@@ -147,36 +144,43 @@ public class StageGenerator : MonoBehaviour
             for (int maxCheck = 0; maxCheck < roomNum; maxCheck++)
             {
                 // 面積比較
-                //roomStatus[(int)RoomStatus.w, maxCheck] * roomStatus[(int)RoomStatus.h, maxCheck] が面積
+                //roomStatus[(int)RoomStatus.w, maxCheck] * roomStatus[(int)RoomStatus.h, maxCheck] が面積、maxCheckが部屋番号
+
                 if (max < roomStatus[(int)RoomStatus.w, maxCheck] * roomStatus[(int)RoomStatus.h, maxCheck])
                 {
                     // 最大面積上書き
                     max = roomStatus[(int)RoomStatus.w, maxCheck] * roomStatus[(int)RoomStatus.h, maxCheck];
 
-                    // 親の部屋番号セット
+                    // 親の部屋番号セット,現在一番でかい部屋のインデックスを登録
                     parentNum = maxCheck;
                 }
             }
-
+            //①
             // 取得した部屋をさらに割る
             if (SplitPoint(roomStatus[(int)RoomStatus.w, parentNum], roomStatus[(int)RoomStatus.h, parentNum]))
             {
+                //横幅がでかい場合
                 // 取得
                 roomStatus[(int)RoomStatus.x, roomCount] = roomStatus[(int)RoomStatus.x, parentNum];
                 roomStatus[(int)RoomStatus.y, roomCount] = roomStatus[(int)RoomStatus.y, parentNum];
+                //line(割る位置)の分を引いてその値（width）を規定のルームカウントのwidthにいれる
                 roomStatus[(int)RoomStatus.w, roomCount] = roomStatus[(int)RoomStatus.w, parentNum] - line;
                 roomStatus[(int)RoomStatus.h, roomCount] = roomStatus[(int)RoomStatus.h, parentNum];
 
                 // 親の部屋を整形する
-                roomStatus[(int)RoomStatus.x, parentNum] += roomStatus[(int)RoomStatus.w, roomCount];
-                roomStatus[(int)RoomStatus.w, parentNum] -= roomStatus[(int)RoomStatus.w, roomCount];
+                //親となっていた部屋が分割した際の右側になるように調整する
+                roomStatus[(int)RoomStatus.x, parentNum] += roomStatus[(int)RoomStatus.w, roomCount];//生成予定のルームのwidth分座標を右に移動
+                roomStatus[(int)RoomStatus.w, parentNum] -= roomStatus[(int)RoomStatus.w, roomCount];//widthを生成予定のルームのwidth分減らす
             }
             else
             {
+                //横幅の分割の際と同じ
+                //縦幅がでかい場合
                 // 取得
                 roomStatus[(int)RoomStatus.x, roomCount] = roomStatus[(int)RoomStatus.x, parentNum];
                 roomStatus[(int)RoomStatus.y, roomCount] = roomStatus[(int)RoomStatus.y, parentNum];
                 roomStatus[(int)RoomStatus.w, roomCount] = roomStatus[(int)RoomStatus.w, parentNum];
+                //line(割る位置)の分を引いてその値（height）を規定のルームカウントのheightにいれる
                 roomStatus[(int)RoomStatus.h, roomCount] = roomStatus[(int)RoomStatus.h, parentNum] - line;
 
                 // 親の部屋を整形する
@@ -187,16 +191,54 @@ public class StageGenerator : MonoBehaviour
             roomCount++;
         }
 
+    }
+
+    void MapInit()
+    {
+        // フロア設定
+        map = new int[mapSizeW, mapSizeH];
+
+        // フロアの初期化
+        for (int nowW = 0; nowW < mapSizeW; nowW++)
+        {
+            for (int nowH = 0; nowH < mapSizeH; nowH++)
+            {
+                // 壁を貼る
+                map[nowW, nowH] = 2;//これはobjectTypeのroadとは関係ない
+                //イメージ図 　各マップのノードに置くものに2を置いてるイメージ　後に0や1といったobjectTypeのものに変えていく
+                /*222222222222
+                  222222222222
+                  222222222222
+                  222222222222
+                  222222222222
+                  222222222222
+                */
+            }
+        }
+    }
+    private void MapGenerate()
+    {
+        initPrefab();
+
+        ///////
+        MapInit();
+        SplitedRoomSetup();
         // 分割した中にランダムな大きさの部屋を生成
         for (int i = 0; i < roomNum; i++)
         {
-            // 生成座標の設定
-            roomStatus[(int)RoomStatus.rx, i] = Random.Range(roomStatus[(int)RoomStatus.x, i] + offsetWall, (roomStatus[(int)RoomStatus.x, i] + roomStatus[(int)RoomStatus.w, i]) - (roomMin + offsetWall));
-            roomStatus[(int)RoomStatus.ry, i] = Random.Range(roomStatus[(int)RoomStatus.y, i] + offsetWall, (roomStatus[(int)RoomStatus.y, i] + roomStatus[(int)RoomStatus.h, i]) - (roomMin + offsetWall));
+            //生成座標の設定
+            int x = roomStatus[(int)RoomStatus.x, i];
+            int y = roomStatus[(int)RoomStatus.y, i];
+            int w = roomStatus[(int)RoomStatus.w, i];
+            int h = roomStatus[(int)RoomStatus.h, i];
+
+            //最小値はoffsetWall(壁の分の余白)＋ ルームステータス(仮置きのｘ座標),最大値はroomの横幅、縦幅の最小値（roomMin）＋ offsetWall
+            roomStatus[(int)RoomStatus.rx, i] = Random.Range(x + offsetWall, (x + w) - (roomMin + offsetWall));
+            roomStatus[(int)RoomStatus.ry, i] = Random.Range(y + offsetWall, (y + h) - (roomMin + offsetWall));
 
             // 部屋の大きさを設定
-            roomStatus[(int)RoomStatus.rw, i] = Random.Range(roomMin, roomStatus[(int)RoomStatus.w, i] - (roomStatus[(int)RoomStatus.rx, i] - roomStatus[(int)RoomStatus.x, i]) - offset);
-            roomStatus[(int)RoomStatus.rh, i] = Random.Range(roomMin, roomStatus[(int)RoomStatus.h, i] - (roomStatus[(int)RoomStatus.ry, i] - roomStatus[(int)RoomStatus.y, i]) - offset);
+            roomStatus[(int)RoomStatus.rw, i] = Random.Range(roomMin, w - (roomStatus[(int)RoomStatus.rx, i] - x) - offset);
+            roomStatus[(int)RoomStatus.rh, i] = Random.Range(roomMin, h - (roomStatus[(int)RoomStatus.ry, i] - y) - offset);
         }
 
         // マップ上書き
@@ -451,14 +493,17 @@ public class StageGenerator : MonoBehaviour
     // 分割点のセット(int x, int y)、大きい方を分割する
     private bool SplitPoint(int x, int y)
     {
+        //横幅と縦幅のでかい方の比較
         // 分割位置の決定
         if (x > y)
         {
+            //横幅がでかい場合
             line = Random.Range(roomMin + (offsetWall * 2), x - (offsetWall * 2 + roomMin));// 縦割り
             return true;
         }
         else
         {
+            //縦幅がでかい場合
             line = Random.Range(roomMin + (offsetWall * 2), y - (offsetWall * 2 + roomMin));// 横割り
             return false;
         }
