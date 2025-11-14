@@ -216,14 +216,11 @@ public class StageGenerator : MonoBehaviour
             }
         }
     }
-    private void MapGenerate()
-    {
-        initPrefab();
 
-        ///////
-        MapInit();
-        SplitedRoomSetup();
+    void DecideRoomScallAndPosition()
+    {
         // 分割した中にランダムな大きさの部屋を生成
+
         for (int i = 0; i < roomNum; i++)
         {
             //生成座標の設定
@@ -232,15 +229,23 @@ public class StageGenerator : MonoBehaviour
             int w = roomStatus[(int)RoomStatus.w, i];
             int h = roomStatus[(int)RoomStatus.h, i];
 
+            //Q :なんでoffsetWallを引くのか、offsetを大きさで引くから必要ないんじゃないのか？
+            //A :大きさ決定時のRandom.Rangeの時に最大値のほうが小さくなってエラーを吐く可能性が大きくなってしまうから
+
             //最小値はoffsetWall(壁の分の余白)＋ ルームステータス(仮置きのｘ座標),最大値はroomの横幅、縦幅の最小値（roomMin）＋ offsetWall
             roomStatus[(int)RoomStatus.rx, i] = Random.Range(x + offsetWall, (x + w) - (roomMin + offsetWall));
             roomStatus[(int)RoomStatus.ry, i] = Random.Range(y + offsetWall, (y + h) - (roomMin + offsetWall));
 
-            // 部屋の大きさを設定
+            //最小値はroomMin(高さ、幅の最小値),最大値はroomの横幅 - （さっき決めた実際の座標 - roomのX座標）=> これによりそのroom内でのローカルな座標が求まる
+            //offsetWallではなくoffsetを引いているのは最小余白のため
             roomStatus[(int)RoomStatus.rw, i] = Random.Range(roomMin, w - (roomStatus[(int)RoomStatus.rx, i] - x) - offset);
             roomStatus[(int)RoomStatus.rh, i] = Random.Range(roomMin, h - (roomStatus[(int)RoomStatus.ry, i] - y) - offset);
         }
 
+    }
+
+    void OverrideMap()
+    {
         // マップ上書き
         for (int count = 0; count < roomNum; count++)
         {
@@ -250,6 +255,8 @@ public class StageGenerator : MonoBehaviour
                 for (int w = 0; w < roomStatus[(int)RoomStatus.w, count]; w++)
                 {
                     // 部屋チェックポイント
+                    //[w + roomStatus[(int)RoomStatus.x, count] = 部屋生成前のx、h + roomStatus[(int)RoomStatus.y, count] = 部屋生成前のh
+                    //の各ノードをforループして一旦wall(1)にする
                     map[w + roomStatus[(int)RoomStatus.x, count], h + roomStatus[(int)RoomStatus.y, count]] = 1;
                 }
 
@@ -260,11 +267,16 @@ public class StageGenerator : MonoBehaviour
             {
                 for (int w = 0; w < roomStatus[(int)RoomStatus.rw, count]; w++)
                 {
+                    //[w + roomStatus[(int)RoomStatus.rx, count] = 生成された部屋の実際のx、h + roomStatus[(int)RoomStatus.ry, count] = 生成された部屋の実際のh
+                    //の各ノードをforループで床にする
                     map[w + roomStatus[(int)RoomStatus.rx, count], h + roomStatus[(int)RoomStatus.ry, count]] = 0;
                 }
             }
         }
 
+    }
+    void ShortRoadCreate()
+    {
         // 道の生成
         int[] splitLength = new int[4];
         int roodPoint = 0;// 道を引く場所
@@ -272,18 +284,18 @@ public class StageGenerator : MonoBehaviour
         // 部屋から一番近い境界線を調べる(十字に調べる)
         for (int nowRoom = 0; nowRoom < roomNum; nowRoom++)
         {
-            // 左の壁からの距離
-            splitLength[0] = roomStatus[(int)RoomStatus.x, nowRoom] > 0 ?
+            // 左の壁からの距離 => 生成された部屋の左側から生成前の部屋の端までの距離
+            splitLength[0] = roomStatus[(int)RoomStatus.x, nowRoom] > 0 ? // => マップの左端じゃないかどうかの条件確認
                 roomStatus[(int)RoomStatus.rx, nowRoom] - roomStatus[(int)RoomStatus.x, nowRoom] : int.MaxValue;
-            // 右の壁からの距離
-            splitLength[1] = (roomStatus[(int)RoomStatus.x, nowRoom] + roomStatus[(int)RoomStatus.w, nowRoom]) < mapSizeW ?
+            // 右の壁からの距離 =>  生成された部屋の右側から生成前の部屋の端までの距離
+            splitLength[1] = (roomStatus[(int)RoomStatus.x, nowRoom] + roomStatus[(int)RoomStatus.w, nowRoom]) < mapSizeW ? //=> マップの右端じゃないかどうかの条件確認
                 (roomStatus[(int)RoomStatus.x, nowRoom] + roomStatus[(int)RoomStatus.w, nowRoom]) - (roomStatus[(int)RoomStatus.rx, nowRoom] + roomStatus[(int)RoomStatus.rw, nowRoom]) : int.MaxValue;
 
-            // 下の壁からの距離
-            splitLength[2] = roomStatus[(int)RoomStatus.y, nowRoom] > 0 ?
+            // 下の壁からの距離 => 生成された部屋の下側から生成前の部屋の端までの距離
+            splitLength[2] = roomStatus[(int)RoomStatus.y, nowRoom] > 0 ?　//=> マップの下端じゃないかどうかの条件確認
                 roomStatus[(int)RoomStatus.ry, nowRoom] - roomStatus[(int)RoomStatus.y, nowRoom] : int.MaxValue;
-            // 上の壁からの距離
-            splitLength[3] = (roomStatus[(int)RoomStatus.y, nowRoom] + roomStatus[(int)RoomStatus.h, nowRoom]) < mapSizeH ?
+            // 上の壁からの距離　=> 生成された部屋の上側から生成前の部屋の端までの距離
+            splitLength[3] = (roomStatus[(int)RoomStatus.y, nowRoom] + roomStatus[(int)RoomStatus.h, nowRoom]) < mapSizeH ?//=> マップの上端じゃないかどうかの条件確認
                 (roomStatus[(int)RoomStatus.y, nowRoom] + roomStatus[(int)RoomStatus.h, nowRoom]) - (roomStatus[(int)RoomStatus.ry, nowRoom] + roomStatus[(int)RoomStatus.rh, nowRoom]) : int.MaxValue;
 
             // マックスでない物のみ先へ
@@ -291,24 +303,32 @@ public class StageGenerator : MonoBehaviour
             {
                 if (splitLength[j] != int.MaxValue)
                 {
-                    // 上下左右判定
+                    // 左右判定, {0,1} 左と右の距離に基づく処理
                     if (j < 2)
                     {
-                        // 道を引く場所を決定
+                        // 道を引く場所を決定,ランダムな高さを設定（生成された部屋の中でのランダムな高さ）
                         roodPoint = Random.Range(roomStatus[(int)RoomStatus.ry, nowRoom] + offset, roomStatus[(int)RoomStatus.ry, nowRoom] + roomStatus[(int)RoomStatus.rh, nowRoom] - offset);
 
                         // マップに書き込む
+                        //境界線の距離の分,mapの各ノード（road = 2）に上書きしていく
+                        //この処理は壁を道に変えていく処理でこのアルゴリズムは床を上書きしてはいけない
                         for (int w = 1; w <= splitLength[j]; w++)
                         {
                             // 左右判定
-                            if (j == 0)
+                            if (j == 0)　//左の場合
                             {
                                 // 左
+                                //左の場合はrx(実際の部屋の座標x)からw分引いていった値がmapのx座標になる
+                                //roomStatus[(int)RoomStatus.rx, nowRoom]は左端（図形の始点）
+                                //左側はrxが始点であり既に床であり、配列的な考えはないのでoffset等の計算は不要
                                 map[(-w) + roomStatus[(int)RoomStatus.rx, nowRoom], roodPoint] = 2;
                             }
-                            else
+                            else //右の場合
                             {
                                 // 右
+                                //roomStatus[(int)RoomStatus.rx, nowRoom] + roomStatus[(int)RoomStatus.rw, nowRoom] = 壁の位置　-offsetで床の最右、wを足して壁の最初の部分になる
+                                //roomStatus[(int)RoomStatus.rw, nowRoom]は要素数（マスの数）だから配列的に考えてrx = 0の時、widthが５のとき、0,1,2,3,4,5となりこれだと6個になる。これは本来のwidth,5として扱えていない
+                                //だからoffset分を引いている
                                 map[w + roomStatus[(int)RoomStatus.rx, nowRoom] + roomStatus[(int)RoomStatus.rw, nowRoom] - offset, roodPoint] = 2;
 
                                 // 最後
@@ -320,9 +340,10 @@ public class StageGenerator : MonoBehaviour
                             }
                         }
                     }
-                    else
+                    else　// 上下判定,{2,3}  上と下の距離に基づく処理
                     {
                         // 道を引く場所を決定
+                        //左右同様だが、今回はxの始点を決める
                         roodPoint = Random.Range(roomStatus[(int)RoomStatus.rx, nowRoom] + offset, roomStatus[(int)RoomStatus.rx, nowRoom] + roomStatus[(int)RoomStatus.rw, nowRoom] - offset);
 
                         // マップに書き込む
@@ -331,12 +352,14 @@ public class StageGenerator : MonoBehaviour
                             // 上下判定
                             if (j == 2)
                             {
-                                // 下
+                                //下
+                                //同様始点が床にする
                                 map[roodPoint, (-h) + roomStatus[(int)RoomStatus.ry, nowRoom]] = 2;
                             }
                             else
                             {
-                                // 上
+                                //上
+                                //左右同様offset分を引いて始点を床に指定
                                 map[roodPoint, h + roomStatus[(int)RoomStatus.ry, nowRoom] + roomStatus[(int)RoomStatus.rh, nowRoom] - offset] = 2;
 
                                 // 最後
@@ -351,11 +374,15 @@ public class StageGenerator : MonoBehaviour
                 }
             }
         }
+    }
 
+    void ConnectEachRoad()
+    {
         int roadVec1 = 0;// 道の始点
         int roadVec2 = 0;// 道の終点
 
         // 道の接続
+        // 各部屋の内２辺だけを確認すればいい理由 : BSP（Binary Space Partitioning：二分割）は分割前の親と壁を共有してるから、親の道とつながり結果的にすべての部屋がつながるから
         for (int nowRoom = 0; nowRoom < roomNum; nowRoom++)
         {
             roadVec1 = 0;
@@ -364,6 +391,8 @@ public class StageGenerator : MonoBehaviour
             for (int roodScan = 0; roodScan < roomStatus[(int)RoomStatus.w, nowRoom]; roodScan++)
             {
                 // 道を検索
+                //境界にある２(road)の部分を探す、この時nowroomだから一見発見されるroadはnowroom(自分自身)が作ったものだと思われるが違う（俺が勘違いしてた）隣接するほかの部屋が作ったroadもある。だからroaaVec1じゃ足りない
+                //roadVec2（他者が作ったroad）も探してroadVec1とroadVec2の間のノードを道に変える
                 if (map[roodScan + roomStatus[(int)RoomStatus.x, nowRoom], roomStatus[(int)RoomStatus.y, nowRoom]] == 2)
                 {
                     // 道の座標セット
@@ -414,14 +443,30 @@ public class StageGenerator : MonoBehaviour
                 map[roomStatus[(int)RoomStatus.x, nowRoom], roadSet] = 2;
             }
         }
+    }
+    private void MapGenerate()
+    {
+        initPrefab();
 
+        ///////
+        MapInit();
+        SplitedRoomSetup();
+        DecideRoomScallAndPosition();
+        OverrideMap();
+        ShortRoadCreate();
+        ConnectEachRoad();
+        GenerateEachObjects();
+    }
+
+    void GenerateEachObjects()
+    {
         // オブジェクトを生成する
         for (int nowH = 0; nowH < mapSizeH; nowH++)
         {
             for (int nowW = 0; nowW < mapSizeW; nowW++)
             {
-               
-                GameObject mazeObject = InstanciateObject(nowW,nowH);
+
+                GameObject mazeObject = InstanciateObject(nowW, nowH);
                 mazeObject.SetActive(true);
                 // 壁の生成
                 //if (map[nowW, nowH] == (int)objectType.wall)
@@ -463,9 +508,7 @@ public class StageGenerator : MonoBehaviour
                 //}
             }
         }
-
     }
-
     GameObject InstanciateObject(int nowW,int nowH)
     {
         int index = map[nowW, nowH];
