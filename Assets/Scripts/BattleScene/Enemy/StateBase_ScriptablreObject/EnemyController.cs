@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using Game.Player;
-
+using Game.SpawnableObj;
 public interface IEnemy 
 {
     GameObject owerObj { get; }
@@ -12,7 +12,7 @@ public interface IEnemy
 
 [RequireComponent(typeof(Animator))]
 
-public class EnemyController : MonoBehaviour, IEnemy
+public class EnemyController : MonoBehaviour, IEnemy,ISpawnableObj
 {
     [SerializeField] EnemyStatusData enemyStatusData;
     [SerializeField] EnemyIdleStateBase idleState;
@@ -26,6 +26,8 @@ public class EnemyController : MonoBehaviour, IEnemy
 
     public Collider enemyCollider { get; private set;}
     public EnemyStatusData EnemyStatusData  => enemyStatusData;
+
+    public GameObject ownerObj  => gameObject;
 
     void Start()
     {

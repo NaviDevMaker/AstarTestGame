@@ -1,10 +1,15 @@
 using UnityEngine;
 using Game.Player;
+using Game.Stage;
+using Game.Spawner;
+using Cysharp.Threading.Tasks;
 public class BattleManager : MonoBehaviour
 {
     [SerializeField] PosaitionSetUper positionSetuper;
     [SerializeField] CameraMover cameraMover;
     [SerializeField] StageGenerator stageGenerator;
+    [SerializeField] ItemSpawner itemSpawner;
+    [SerializeField] EnemySpawner enemySpawner;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -16,7 +21,6 @@ public class BattleManager : MonoBehaviour
     {
 
     }
-
     void Initialize()
     {
         var player = GameObject.FindFirstObjectByType<PlayerController>();
@@ -25,5 +29,8 @@ public class BattleManager : MonoBehaviour
         positionSetuper.Initialize(playerTra);
         cameraMover.Initialize(playerTra);
         stageGenerator.Initialize();
+        //itemSpawner.isInitialized = () => stageGenerator.isInitialize;
+        itemSpawner.Initialize();
+        enemySpawner.Initialize();
     }
 }

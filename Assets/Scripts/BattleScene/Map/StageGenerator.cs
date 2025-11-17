@@ -23,10 +23,11 @@ namespace Game.Stage
         [SerializeField] ObjectState GroundSetting;
         [SerializeField] ObjectState RoadSetting;
 
+        public ObjectState _WallSetting => WallSetting;
         public Vector3 defaultPosition { get; private set;}
 
         [Serializable]
-        class ObjectState
+        public class ObjectState
         {
             public Color color;
             public Vector3 size;
@@ -66,17 +67,18 @@ namespace Game.Stage
         }
 
        
-        private GameObject[] mapObjects;               // マップ生成用のオブジェクト配列
+        public GameObject[] mapObjects { get; private set;}               // マップ生成用のオブジェクト配列
         private GameObject[] objectParents;             // 各タイプ別の親オブジェクト配列
 
         private const int offsetWall = 2;   // 壁から離す距離
         private const int offset = 1;       // 調整用
-
+        //public bool isInitialize = false;
         private void Awake() => Instance = this;
         public void Initialize()
         {
             SetMapsizeAndPosition();
             MapGenerate();
+            //isInitialize = true;
         }
         void SetMapsizeAndPosition()
         {
@@ -518,24 +520,11 @@ namespace Game.Stage
             int index = map[nowW, nowH];
             //if (index == (int)objectType.ground) return null;
             GameObject cube = mapObjects[index];
-            Vector3 scale = cube.transform.localScale;
+            //Vector3 scale = cube.transform.localScale;
             Transform parent = objectParents[index].transform;
             Quaternion rot = Quaternion.identity;
-            Vector3 pos = index switch
-            {
-                (int)objectType.wall => new Vector3(
-                        defaultPosition.x + nowW * scale.x + scale.x * 0.5f,
-                        defaultPosition.y + ((WallSetting.size.y - 1) * 0.5f),
-                        defaultPosition.z + nowH * scale.z + scale.z * 0.5f),
-                (int)objectType.ground => new Vector3(
-                        defaultPosition.x + nowW * scale.x + scale.x * 0.5f,
-                        defaultPosition.y,
-                        defaultPosition.z + nowH * scale.z + scale.z * 0.5f),
-                (int)objectType.road => new Vector3(defaultPosition.x + nowW * scale.x + scale.x * 0.5f,
-                        defaultPosition.y,
-                        defaultPosition.z + nowH * scale.z + scale.z * 0.5f),
-                _ => default(Vector3)
-            };
+            MapPositionInfo mapPositionInfo = new MapPositionInfo(nowW,nowH);
+            Vector3 pos = StageMethods.GetTargetNodePos(mapPositionInfo);
             return Instantiate(cube, pos, rot, parent);
         }
         // 分割点のセット(int x, int y)、大きい方を分割する
@@ -565,8 +554,4 @@ namespace Game.Stage
             return (int)SplitType.cannnotSplit;
         }
     }
-
-
-
-
 }

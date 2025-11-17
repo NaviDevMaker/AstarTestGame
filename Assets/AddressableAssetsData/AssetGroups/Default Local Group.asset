@@ -30,6 +30,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6c733e4dc9ab73c4598e3126eb9bf97c
+    m_Address: Datas/SpawnDatas/EnemyGenerateSetting
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7649063e303719149993eb5e159cd0d3
     m_Address: Animations/Homeless/Walk
     m_ReadOnly: 0
@@ -37,6 +42,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b7eab32f7a8e73e4ca522ad10701fa67
     m_Address: Datas/ItemData/ItemMoveSetting
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d902f957437906a45a5df892c384e0fe
+    m_Address: Datas/ItemData/ItemGenerateSetting
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
