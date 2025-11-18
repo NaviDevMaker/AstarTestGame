@@ -2,49 +2,65 @@ using UnityEngine;
 using UnityEngine.Events;
 using Game.Player;
 using Game.SpawnableObj;
-public interface IEnemy 
-{
-    GameObject owerObj { get; }
-    UnityAction OnDeadAction { get; }
 
-    Collider enemyCollider { get;}
+
+namespace Game.Enemy
+{
+    public interface IEnemy
+    {
+        GameObject owerObj { get; }
+        UnityAction OnDeadAction { get; }
+        Material meshMat { get; }
+        void StateMachineSet();
+        Collider enemyCollider { get; }
+    }
+
+    [RequireComponent(typeof(Animator))]
+    public class EnemyController : MonoBehaviour, IEnemy, ISpawnableObj
+    {
+        [SerializeField] EnemyStatusData enemyStatusData;
+        [SerializeField] EnemyIdleStateBase idleStateTemplate;
+        [SerializeField] EnemyMoveStateBase moveStateTemplate;
+        [SerializeField] EnemyDeathStateBase deathStateTemplate;
+
+        StateMachine stateMachine;
+        public UnityAction OnDeadAction { get; private set; }
+        public GameObject owerObj => this.gameObject;
+        public Collider enemyCollider { get; private set; }
+        public EnemyStatusData EnemyStatusData => enemyStatusData;
+        public GameObject ownerObj => gameObject;
+        public Material meshMat { get; private set; }
+
+        EnemyActionHelper<EnemyController> enemyActionHelper;
+        void Start()
+        {
+            Initialize();
+        }
+        // Update is called once per frame
+        void Update()
+        {
+            stateMachine?.Update();
+            enemyActionHelper?.StartTranslusentAction();
+            TargetManager.Instance.SetCurrentTarget(this);
+        }
+        void Initialize()
+        {
+            enemyCollider = GetComponentInChildren<Collider>();
+            var renderer = GetComponentInChildren<SkinnedMeshRenderer>();
+            meshMat = renderer.material;
+            StateMachineSet();
+            enemyActionHelper = new EnemyActionHelper<EnemyController>(this);
+        }
+        public void StateMachineSet()
+        {
+            var animator = GetComponent<Animator>();
+            var idle = idleStateTemplate.Clone<EnemyIdleStateBase>();
+            var move = moveStateTemplate.Clone<EnemyMoveStateBase>();
+            var death = deathStateTemplate.Clone<EnemyDeathStateBase>();
+            stateMachine = new StateMachine(this, animator, idle, move, death);
+            OnDeadAction = stateMachine.ChangeToDeathState;
+            stateMachine.ChangeState(idle);
+        }
+    }
 }
 
-[RequireComponent(typeof(Animator))]
-
-public class EnemyController : MonoBehaviour, IEnemy,ISpawnableObj
-{
-    [SerializeField] EnemyStatusData enemyStatusData;
-    [SerializeField] EnemyIdleStateBase idleState;
-    [SerializeField] EnemyMoveStateBase moveState;
-    [SerializeField] EnemyDeathStateBase deathState;
-
-    StateMachine stateMachine;
-    public UnityAction OnDeadAction { get; private set; }
-
-    public GameObject owerObj => this.gameObject;
-
-    public Collider enemyCollider { get; private set;}
-    public EnemyStatusData EnemyStatusData  => enemyStatusData;
-
-    public GameObject ownerObj  => gameObject;
-
-    void Start()
-    {
-        Initialize();
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        stateMachine.Update();
-        TargetManager.Instance.SetCurrentTarget(this);
-    }
-    void Initialize()
-    {
-        var animator = GetComponent<Animator>();
-        enemyCollider = GetComponentInChildren<Collider>();
-        stateMachine = new StateMachine(this, animator, idleState, moveState, deathState);
-        OnDeadAction = stateMachine.ChangeToDeathState;
-        stateMachine.ChangeState(idleState);
-    }
-}

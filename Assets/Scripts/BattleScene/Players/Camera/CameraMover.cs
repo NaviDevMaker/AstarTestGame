@@ -4,6 +4,7 @@ public class CameraMover : MonoBehaviour
 {
     Transform playerTra;
     Vector3 previousPos;
+    public bool isSetuped { get; set; } = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -12,6 +13,7 @@ public class CameraMover : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!isSetuped) return;
         ChaseTarget();
     }
 

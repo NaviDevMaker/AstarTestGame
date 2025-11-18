@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
+using Cysharp.Threading.Tasks;
 
 namespace Game.Stage
 {
@@ -15,7 +16,7 @@ namespace Game.Stage
         road = 2,
     }
 
-    public class StageGenerator : MonoBehaviour
+    public class StageGenerator : MonoBehaviour//,IAssetSetter
     {
         public static StageGenerator Instance { get; private set; }
         [SerializeField] Terrain terrain;
@@ -29,8 +30,9 @@ namespace Game.Stage
         [Serializable]
         public class ObjectState
         {
-            public Color color;
+            //public Color color;
             public Vector3 size;
+            public Material material;
         }
 
         private int mapSizeW;        // マップの横サイズ
@@ -66,7 +68,6 @@ namespace Game.Stage
             horizontal = 1,
         }
 
-       
         public GameObject[] mapObjects { get; private set;}               // マップ生成用のオブジェクト配列
         private GameObject[] objectParents;             // 各タイプ別の親オブジェクト配列
 
@@ -91,7 +92,8 @@ namespace Game.Stage
         // 生成用のオブジェクトを用意
         void initPrefab()
         {
-            // 親オブジェクトの生成
+            //await GetAsset();
+            //// 親オブジェクトの生成
             GameObject groundParent = new GameObject("Ground");
             GameObject wallParent = new GameObject("Wall");
             GameObject roadParent = new GameObject("Road");
@@ -102,24 +104,30 @@ namespace Game.Stage
             // 迷路オブジェクトの初期化
             GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Cube);
             ground.transform.localScale = GroundSetting.size;
-            ground.GetComponent<Renderer>().material.color = GroundSetting.color;
+            Material groundMat = new Material(GroundSetting.material);
+            ground.GetComponent<MeshRenderer>().material = groundMat;
             ground.name = "ground";
             ground.transform.SetParent(objectParents[(int)objectType.ground].transform);
+            ground.layer = Layers.groundLayer_NameTo;
             ground.SetActive(false);
 
             GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
             wall.transform.localScale = WallSetting.size;
-            wall.GetComponent<Renderer>().material.color = WallSetting.color;
+            Material wallMat = new Material(WallSetting.material);
+            wall.GetComponent<MeshRenderer>().material = wallMat;
             wall.name = "wall";
             wall.transform.SetParent(objectParents[(int)objectType.wall].transform);
+            wall.layer = Layers.wallLayer_NameTo;
             wall.SetActive(false);
 
             GameObject road = GameObject.CreatePrimitive(PrimitiveType.Cube);
             road.transform.localScale = RoadSetting.size;
-            road.GetComponent<Renderer>().material.color = RoadSetting.color;
+            Material roadMat = new Material(RoadSetting.material);
+            road.GetComponent<MeshRenderer>().material = roadMat;
             road.name = "road";
             road.transform.SetParent(objectParents[(int)objectType.road].transform);
-            wall.SetActive(false);
+            road.layer = Layers.roadLayer_NameTo;
+            road.SetActive(false);
             // 配列にプレハブを入れる
             mapObjects = new GameObject[] { ground, wall, road };
         }
@@ -490,7 +498,7 @@ namespace Game.Stage
         }
         private void MapGenerate()
         {
-            initPrefab();
+           initPrefab();
 
             ///////
             MapInit();
@@ -553,5 +561,31 @@ namespace Game.Stage
             // どちらも不可能 → これ以上分割できない
             return (int)SplitType.cannnotSplit;
         }
+
+        //public async UniTask GetAsset()
+        //{
+        //    // 親オブジェクトの生成
+        //    var groundParent = new GameObject("Ground");
+        //    var wallParent = new GameObject("Wall");
+        //    var roadParent = new GameObject("Road");
+
+        //    objectParents = new GameObject[] {groundParent, wallParent, roadParent };
+        //    var wallPrefab = await GetAssetsMethods.GetAsset<GameObject>("Assets/Prefabs/wall");
+        //    var roadPrefab = await GetAssetsMethods.GetAsset<GameObject>("Assets/Prefabs/Road");
+        //    var groundPrefab = await GetAssetsMethods.GetAsset<GameObject>("Assets/Prefabs/Floor"); 
+        //    var wallObj = Instantiate(wallPrefab);
+        //    wallObj.transform.SetParent(objectParents[(int)objectType.wall].transform);
+        //    wallObj.name = "wall";
+        //    var roadObj = Instantiate(roadPrefab);
+        //    roadObj.transform.SetParent(objectParents[(int)objectType.road].transform);
+        //    roadObj.name = "road";
+        //    var groundObj = Instantiate(groundPrefab);
+        //    groundObj.transform.SetParent(objectParents[(int)objectType.ground].transform);
+        //    groundObj.name = "ground";
+        //    wallObj.SetActive(false);
+        //    roadObj.SetActive(false);
+        //    groundObj.SetActive(false);
+        //    mapObjects = new GameObject[]{ groundObj,wallObj,roadObj};
+        //}
     }
 }

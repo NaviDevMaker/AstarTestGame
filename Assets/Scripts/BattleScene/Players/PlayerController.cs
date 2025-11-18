@@ -4,7 +4,7 @@ using UnityEngine.Events;
 using Game.Item;
 using System.Linq;
 using System;
-
+using Game.Enemy;
 
 namespace Game.Player
 {

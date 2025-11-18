@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-
+using Game.Enemy;
 namespace Game.Player
 {
     public class AttackHitColider : MonoBehaviour

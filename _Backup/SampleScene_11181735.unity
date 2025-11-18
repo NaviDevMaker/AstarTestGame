@@ -334,9 +334,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStatusData: {fileID: 11400000, guid: 3cfd4b7a2b39a2c4a9a12b3a3f39f544, type: 2}
-  idleState: {fileID: 11400000, guid: 60f55542a43079d4194179fecf5955f0, type: 2}
-  moveState: {fileID: 11400000, guid: 652febdc24c17e44a930ed955301228b, type: 2}
-  deathState: {fileID: 11400000, guid: 9c5e2a314f5142e46a9979d6e856c8ce, type: 2}
+  idleStateTemplate: {fileID: 0}
+  moveStateTemplate: {fileID: 0}
+  deathStateTemplate: {fileID: 0}
 --- !u!95 &145111743
 Animator:
   serializedVersion: 7
@@ -535,9 +535,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStatusData: {fileID: 0}
-  idleState: {fileID: 11400000, guid: bf7aee80fc6549f4285c5ef2c3d60310, type: 2}
-  moveState: {fileID: 11400000, guid: c0e656bb17dba2241b1dbb2509a433a7, type: 2}
-  deathState: {fileID: 11400000, guid: abc7f639f13394d42ae9d579234fb0e7, type: 2}
+  idleStateTemplate: {fileID: 0}
+  moveStateTemplate: {fileID: 0}
+  deathStateTemplate: {fileID: 0}
 --- !u!95 &150939324
 Animator:
   serializedVersion: 7
@@ -1279,7 +1279,7 @@ MonoBehaviour:
   terrain: {fileID: 139587632}
   WallSetting:
     color: {r: 1, g: 0, b: 0, a: 0}
-    size: {x: 1, y: 1, z: 1}
+    size: {x: 1, y: 10, z: 1}
   GroundSetting:
     color: {r: 0, g: 0, b: 0, a: 0}
     size: {x: 1, y: 1, z: 1}
@@ -1658,9 +1658,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStatusData: {fileID: 11400000, guid: 3cfd4b7a2b39a2c4a9a12b3a3f39f544, type: 2}
-  idleState: {fileID: 11400000, guid: 182a5a7728c658e47ab1f92c5cdcada8, type: 2}
-  moveState: {fileID: 11400000, guid: 0bf5a60e8ee8f784d9aae0df048eb8a0, type: 2}
-  deathState: {fileID: 11400000, guid: df96911cfe70401458a149c9ce75161b, type: 2}
+  idleStateTemplate: {fileID: 0}
+  moveStateTemplate: {fileID: 0}
+  deathStateTemplate: {fileID: 0}
 --- !u!95 &850554901
 Animator:
   serializedVersion: 7
@@ -2150,9 +2150,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStatusData: {fileID: 0}
-  idleState: {fileID: 11400000, guid: 60f55542a43079d4194179fecf5955f0, type: 2}
-  moveState: {fileID: 11400000, guid: 652febdc24c17e44a930ed955301228b, type: 2}
-  deathState: {fileID: 11400000, guid: 9c5e2a314f5142e46a9979d6e856c8ce, type: 2}
+  idleStateTemplate: {fileID: 0}
+  moveStateTemplate: {fileID: 0}
+  deathStateTemplate: {fileID: 0}
 --- !u!95 &1323497993
 Animator:
   serializedVersion: 7
@@ -2374,9 +2374,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStatusData: {fileID: 0}
-  idleState: {fileID: 11400000, guid: 182a5a7728c658e47ab1f92c5cdcada8, type: 2}
-  moveState: {fileID: 11400000, guid: 0bf5a60e8ee8f784d9aae0df048eb8a0, type: 2}
-  deathState: {fileID: 11400000, guid: df96911cfe70401458a149c9ce75161b, type: 2}
+  idleStateTemplate: {fileID: 0}
+  moveStateTemplate: {fileID: 0}
+  deathStateTemplate: {fileID: 0}
 --- !u!95 &1395332151
 Animator:
   serializedVersion: 7
@@ -2746,9 +2746,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStatusData: {fileID: 11400000, guid: 3cfd4b7a2b39a2c4a9a12b3a3f39f544, type: 2}
-  idleState: {fileID: 11400000, guid: 1309a6cb765fe7741afd05e093bcbd34, type: 2}
-  moveState: {fileID: 11400000, guid: 94ff6b30712af1e40939e104682b906c, type: 2}
-  deathState: {fileID: 11400000, guid: e461e1cd35630c443bca8dc8782484e6, type: 2}
+  idleStateTemplate: {fileID: 0}
+  moveStateTemplate: {fileID: 0}
+  deathStateTemplate: {fileID: 0}
 --- !u!95 &1514494926
 Animator:
   serializedVersion: 7
@@ -2922,9 +2922,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStatusData: {fileID: 11400000, guid: 3cfd4b7a2b39a2c4a9a12b3a3f39f544, type: 2}
-  idleState: {fileID: 11400000, guid: bf7aee80fc6549f4285c5ef2c3d60310, type: 2}
-  moveState: {fileID: 11400000, guid: c0e656bb17dba2241b1dbb2509a433a7, type: 2}
-  deathState: {fileID: 11400000, guid: abc7f639f13394d42ae9d579234fb0e7, type: 2}
+  idleStateTemplate: {fileID: 0}
+  moveStateTemplate: {fileID: 0}
+  deathStateTemplate: {fileID: 0}
 --- !u!95 &1629990050
 Animator:
   serializedVersion: 7
@@ -3500,9 +3500,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStatusData: {fileID: 0}
-  idleState: {fileID: 11400000, guid: 1309a6cb765fe7741afd05e093bcbd34, type: 2}
-  moveState: {fileID: 11400000, guid: 94ff6b30712af1e40939e104682b906c, type: 2}
-  deathState: {fileID: 11400000, guid: e461e1cd35630c443bca8dc8782484e6, type: 2}
+  idleStateTemplate: {fileID: 0}
+  moveStateTemplate: {fileID: 0}
+  deathStateTemplate: {fileID: 0}
 --- !u!95 &1888768684
 Animator:
   serializedVersion: 7

@@ -1,27 +1,33 @@
 using UnityEngine;
 
-[CreateAssetMenu]
-public class EnemyIdleStateBase : StateBase
+
+namespace Game.Enemy
 {
-    public override void Initialize(StateMachine stateMachine, IEnemy owner, Animator animator)
+    [CreateAssetMenu]
+    public class EnemyIdleStateBase : StateBase
     {
-        base.Initialize(stateMachine, owner, animator);
-        animatorHash = Animator.StringToHash("isIdling");
-    }
-    public override void OnEnter()
-    {
-        base.OnEnter();
+        public override void Initialize(StateMachine stateMachine, IEnemy owner, Animator animator)
+        {
+            base.Initialize(stateMachine, owner, animator);
+            animatorHash = Animator.StringToHash("isIdling");
+        }
+        public override void OnEnter()
+        {
+            base.OnEnter();
+        }
+
+        public override void OnExit()
+        {
+            base.OnExit();
+        }
+
+        public override void OnEnterChangeAnimation() => animator.SetBool(animatorHash, true);
+        public override void OnExitChangeAnimation() => animator.SetBool(animatorHash, false);
+
+        public override void OnUpdate()
+        {
+        }
     }
 
-    public override void OnExit()
-    {
-        base.OnExit();
-    }
-
-    public override void OnEnterChangeAnimation() => animator.SetBool(animatorHash,true);
-    public override void OnExitChangeAnimation() => animator.SetBool(animatorHash,false);
-
-    public override void OnUpdate()
-    {
-    }
 }
+

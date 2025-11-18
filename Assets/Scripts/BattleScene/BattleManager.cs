@@ -26,9 +26,10 @@ public class BattleManager : MonoBehaviour
         var player = GameObject.FindFirstObjectByType<PlayerController>();
         if (player == null) throw new System.Exception();
         var playerTra = player.transform;
+        
+        stageGenerator.Initialize();
         positionSetuper.Initialize(playerTra);
         cameraMover.Initialize(playerTra);
-        stageGenerator.Initialize();
         //itemSpawner.isInitialized = () => stageGenerator.isInitialize;
         itemSpawner.Initialize();
         enemySpawner.Initialize();

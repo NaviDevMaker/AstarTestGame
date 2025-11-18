@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+using Game.Enemy;
 namespace Game.Spawner
 {
     [CreateAssetMenu]
