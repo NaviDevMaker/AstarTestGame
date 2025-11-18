@@ -1,4 +1,5 @@
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace Game.Enemy
 {
@@ -10,7 +11,7 @@ namespace Game.Enemy
         }
 
         TEnemy owner;
-        public void StartTranslusentAction()
+        public async UniTask StartTranslusentAction()
         {
             var baseAlpha = 0.5f;
             var changeSpeed = 10.0f;
@@ -22,6 +23,7 @@ namespace Game.Enemy
                 var color = owner.meshMat.color;
                 color.a = alpha;
                 owner.meshMat.color = color;
+                await UniTask.Yield();
             }
         }
     }

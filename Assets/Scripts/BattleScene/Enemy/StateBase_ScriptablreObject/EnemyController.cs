@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Game.Player;
 using Game.SpawnableObj;
-
+using Cysharp.Threading.Tasks;
 
 namespace Game.Enemy
 {
@@ -40,7 +40,7 @@ namespace Game.Enemy
         void Update()
         {
             stateMachine?.Update();
-            enemyActionHelper?.StartTranslusentAction();
+            enemyActionHelper?.StartTranslusentAction().Forget();
             TargetManager.Instance.SetCurrentTarget(this);
         }
         void Initialize()
