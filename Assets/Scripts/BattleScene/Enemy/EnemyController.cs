@@ -10,6 +10,8 @@ namespace Game.Enemy
     {
         GameObject owerObj { get; }
         UnityAction OnDeadAction { get; }
+
+        bool isDead { get; set;}
         Material meshMat { get; }
         void StateMachineSet();
         Collider enemyCollider { get; }
@@ -30,6 +32,7 @@ namespace Game.Enemy
         public EnemyStatusData EnemyStatusData => enemyStatusData;
         public GameObject ownerObj => gameObject;
         public Material meshMat { get; private set; }
+        public bool isDead { get; set; } = false;
 
         EnemyActionHelper<EnemyController> enemyActionHelper;
         void Start()

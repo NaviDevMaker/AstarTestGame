@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 7
   life: 5
-  attackAngle: 30
+  attackAngle: 60
   pickUpAngle: 90
   pickUpRadius: 2
   rotateSpeed: 15
-  detectRange: 1.5
+  detectRange: 2
   attackEndFrame: 15
   invincibleDuration: 2

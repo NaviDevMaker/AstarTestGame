@@ -17,6 +17,8 @@ namespace Game.Enemy
 
         private void OnTriggerStay(Collider other)
         {
+            if (owner.isDead) return;
+            Debug.Log("adafdjadfhaeljfdalsjda");
             var obj = other.gameObject;
             DamageProvider.TryAddDamage(obj, damage);
         }

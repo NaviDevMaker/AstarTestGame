@@ -23,7 +23,7 @@ namespace Game.Enemy
                 var color = owner.meshMat.color;
                 color.a = alpha;
                 owner.meshMat.color = color;
-                await UniTask.Yield();
+                await UniTask.Yield(cancellationToken:owner.GetCancellationTokenOnDestroy());
             }
         }
     }

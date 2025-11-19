@@ -13,6 +13,7 @@ public static class DamageProvider
     //本来はDamageableのチェック見れば一発だけど勉強の為
     public static void TryAddDamage(GameObject other,int damage)
     {
+        Debug.Log($"アザーの名前:{other.name}", other);
         if (other == null) return;
         var components = other.GetComponents<MonoBehaviour>();
         foreach(var cmp in components)

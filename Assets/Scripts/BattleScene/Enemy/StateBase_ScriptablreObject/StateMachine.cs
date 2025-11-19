@@ -36,6 +36,7 @@ namespace Game.Enemy
         {
             //if (currentState == DeathState) return;
             Debug.Log("Ž€‹Ž", owner.owerObj);
+            owner.isDead = true;
             ChangeState(DeathState);
         }
         public void Update() => currentState?.OnUpdate();

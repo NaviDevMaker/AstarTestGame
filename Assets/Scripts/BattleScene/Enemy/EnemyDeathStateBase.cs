@@ -1,5 +1,6 @@
 using UnityEngine;
-
+using Cysharp.Threading.Tasks;
+using System;
 namespace Game.Enemy
 {
     [CreateAssetMenu]
@@ -14,6 +15,7 @@ namespace Game.Enemy
         public override void OnEnter()
         {
             base.OnEnter();
+            WaitDeadAction().Forget();
             Debug.Log($"Ž€–S,{owner.owerObj.name}");
             //UnityEngine.Object.Destroy(owner.owerObj);
         }
@@ -25,6 +27,19 @@ namespace Game.Enemy
         {
         }
         public override void OnExitChangeAnimation() { }
+
+        async UniTask WaitDeadAction()
+        {
+            try
+            {
+                await UniTask.WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Death")
+                                        , cancellationToken: owner.owerObj.GetCancellationTokenOnDestroy());
+                await UniTask.WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f
+                                        , cancellationToken: owner.owerObj.GetCancellationTokenOnDestroy());
+                UnityEngine.Object.Destroy(owner.owerObj);
+            }
+            catch (OperationCanceledException) { }
+        }
     }
 
 }

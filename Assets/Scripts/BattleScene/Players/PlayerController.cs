@@ -60,7 +60,7 @@ namespace Game.Player
         }
         void Initialize()
         {
-            animator = GetComponentInChildren<Animator>();
+            animator = GetComponent<Animator>();
             StateSetup();
             PlayerSetUp();
             ChangeState(_playerIdleState);
@@ -88,7 +88,7 @@ namespace Game.Player
         public async UniTask GetAsset()
         {
             var animData = await GetAssetsMethods.GetAsset<AnimationData>("Datas/PlayerAnimationData");
-            if (statusData == null || animData == null) throw new System.Exception();
+            if (animData == null) throw new System.Exception();
             animationData = animData;
         }
         public (int hash,string clipName,float length) GetAnimInfo(PlayerStateMachineBase<PlayerController> stateMachineBase)
