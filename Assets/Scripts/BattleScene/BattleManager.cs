@@ -10,6 +10,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] StageGenerator stageGenerator;
     [SerializeField] ItemSpawner itemSpawner;
     [SerializeField] EnemySpawner enemySpawner;
+    [SerializeField] ScoreManager scoreManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -33,5 +34,6 @@ public class BattleManager : MonoBehaviour
         //itemSpawner.isInitialized = () => stageGenerator.isInitialize;
         itemSpawner.Initialize();
         enemySpawner.Initialize();
+        scoreManager.Initialize();
     }
 }

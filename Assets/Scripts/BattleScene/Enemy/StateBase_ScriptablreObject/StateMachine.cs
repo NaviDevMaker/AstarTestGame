@@ -40,11 +40,6 @@ namespace Game.Enemy
             ChangeState(DeathState);
         }
         public void Update() => currentState?.OnUpdate();
-
-        void SetCloneState()
-        {
-
-        }
     }
 
 }

@@ -10,7 +10,7 @@ namespace Game.Enemy
     {
         GameObject owerObj { get; }
         UnityAction OnDeadAction { get; }
-
+        EnemyStatusData _enemyStatusData { get; }
         bool isDead { get; set;}
         Material meshMat { get; }
         void StateMachineSet();
@@ -29,7 +29,7 @@ namespace Game.Enemy
         public UnityAction OnDeadAction { get; private set; }
         public GameObject owerObj => this.gameObject;
         public Collider enemyCollider { get; private set; }
-        public EnemyStatusData EnemyStatusData => enemyStatusData;
+        public EnemyStatusData _enemyStatusData => enemyStatusData;
         public GameObject ownerObj => gameObject;
         public Material meshMat { get; private set; }
         public bool isDead { get; set; } = false;
@@ -38,12 +38,13 @@ namespace Game.Enemy
         void Start()
         {
             Initialize();
+            enemyActionHelper?.StartTranslusentAction().Forget();
         }
         // Update is called once per frame
         void Update()
         {
             stateMachine?.Update();
-            enemyActionHelper?.StartTranslusentAction().Forget();
+            if (isDead) return;
             TargetManager.Instance.SetCurrentTarget(this);
         }
         void Initialize()

@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: ce11530945330ff43a0de7b6c270dd2f
   m_SerializeEntries:
+  - m_GUID: 0e2bcca17b4974f428193a8df05cee45
+    m_Address: Datas/Enemy/EnemyActionFieldData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 10f9d1112123e604183f5d5a60d827b3
     m_Address: Animations/Homeless/Idle
     m_ReadOnly: 0

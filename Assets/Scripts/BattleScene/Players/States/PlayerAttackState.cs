@@ -36,7 +36,7 @@ namespace Game.Player
             {
                 isAttacking = true;
                 controller.SetHashToFalse();
-                controller.animator.Play(animationClipName);
+                controller.animator.Play(animationClipName, layerIndex);
                 controller.animator.SetBool(animatorHash, true);
                 Func<bool> waitAttackAnim =  () =>
                 {
@@ -53,24 +53,31 @@ namespace Game.Player
                     if(controller.currentTarget != null)
                     {
                         Debug.Log("taosu");
-                        controller.currentTarget.OnDeadAction?.Invoke();
+                        var currentTarget = controller.currentTarget;
+                        currentTarget.OnDeadAction?.Invoke();
+                        controller.AddScoreAction?.Invoke(currentTarget);
                         controller.currentTarget = null;
                         break;
                     }
                     await UniTask.Yield(cancellationToken: token);
                 }
 
-                await UniTask.WaitUntil(() => GetCurrentNormalizeTime() >= 0.99f);
+                await UniTask.WaitUntil(() => GetCurrentNormalizeTime() >= 0.95f);
             }
-            catch (OperationCanceledException){ controller.animator.SetBool(animatorHash,false); }
-            isAttacking = false;
-            controller.animator.SetBool(animatorHash, false);
-            Debug.Log("çUåÇèIÇÌÇËÇ≈Ç∑");
+            catch (OperationCanceledException){}
+            finally
+            {
+                isAttacking = false;
+                controller.animator.SetBool(animatorHash, false);
+                Debug.Log("çUåÇèIÇÌÇËÇ≈Ç∑");
+            }
+           
         }       
         float GetCurrentNormalizeTime()
         {
-            var now = controller.animator.GetCurrentAnimatorStateInfo(layerIndex).normalizedTime;
-            return now % 1;
+            return controller.animator.GetCurrentAnimatorStateInfo(layerIndex).normalizedTime;
+            //var now = controller.animator.GetCurrentAnimatorStateInfo(layerIndex).normalizedTime;
+            //return now % 1;
         }
         async UniTask<float> GetAttackableNormalizeTime()
         {
@@ -81,7 +88,6 @@ namespace Game.Player
             var attackEndFrame = controller.playerStatusData.AttackEndFrame;
             return attackEndFrame / maxFrame;
         }
-
         public void LayerSet() => layerIndex = controller.animationData.AttackLayerIndex;
     }
 }

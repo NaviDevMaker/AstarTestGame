@@ -1,10 +1,12 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
-using Game.Item;
+using System.Collections.Generic;
+
 using System.Linq;
 using System;
 using Game.Enemy;
+using NUnit.Framework;
 
 namespace Game.Player
 {
@@ -13,9 +15,11 @@ namespace Game.Player
         (int hash,string clipName,float length) GetAnimInfo(PlayerStateMachineBase<TPlayer> stateMachineBase);
         UnityAction OnHitEnemyAction { get; set;}
         Func<float,UniTask> OnDeadAction { get; set;}
+        UnityAction<IEnemy> AddScoreAction { get; set;}
         bool isDead { get;}
         bool isInvincible { get; set;}
-    }
+        List<Material[]> meshMats { get;}
+     }
     public class PlayerController : MonoBehaviour,IAssetSetter,IPlayer<PlayerController>,IDamageable
     {
         public AnimationData animationData { get; private set; }
@@ -29,14 +33,18 @@ namespace Game.Player
         PlayerStateMachineBase<PlayerController> currentState = null;
 
         [SerializeField] PlayerStatusData statusData;
+        [SerializeField] PlayerTweenFieldDatas tweenFieldDatas;
         public PlayerStatusData playerStatusData => statusData;
+        public PlayerTweenFieldDatas playerTweenFieldDatas => tweenFieldDatas;
         public Animator animator { get; private set; }
         public bool isDead { get; private set; }
         public IEnemy currentTarget { get; set;}
         public UnityAction OnHitEnemyAction { get; set;}
         public int currentLife { get; set;}
-        public bool isInvincible { get; set;}
+        public bool isInvincible { get; set; }
         public Func<float,UniTask>OnDeadAction { get; set; }
+        public List<Material[]> meshMats { get; private set; } = new List<Material[]>();
+        public UnityAction<IEnemy> AddScoreAction { get; set; }
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         async void Start()
@@ -61,6 +69,7 @@ namespace Game.Player
         void Initialize()
         {
             animator = GetComponent<Animator>();
+            MaterialSetup();
             StateSetup();
             PlayerSetUp();
             ChangeState(_playerIdleState);
@@ -77,7 +86,7 @@ namespace Game.Player
         void PlayerSetUp()
         {
             currentLife = playerStatusData.Life;
-            OnHitEnemyAction += _playerHitState.WaitInvincibleTime;       
+            OnHitEnemyAction += _playerHitState.WaitInvincibleTime;
         }
         public void ChangeState(PlayerStateMachineBase<PlayerController> nextState)
         {
@@ -107,6 +116,8 @@ namespace Game.Player
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, statusData.PickUpRadius);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, statusData.DetectRange);
         }
         public void TakeDamage(int damage)
         {
@@ -116,6 +127,16 @@ namespace Game.Player
             if(currentLife <= 0) isDead = true;
         }
         public void SetHashToFalse() => _playerItemPickUpState.SetHashToFalse();
+
+        void MaterialSetup()
+        {
+            var renderers = GetComponentsInChildren<Renderer>();
+            foreach (Renderer renderer in renderers)
+            {
+                var rendererMats = renderer.materials;
+                meshMats.Add(rendererMats);
+            }
+        }
     }
 }
 

@@ -12,7 +12,7 @@ namespace Game.Enemy
         private void Awake()
         {
             owner = transform.parent.GetComponent<EnemyController>();
-            damage = owner.EnemyStatusData.DamageAmount;
+            damage = owner._enemyStatusData.DamageAmount;
         }
 
         private void OnTriggerStay(Collider other)

@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06485440d021ea24d84fb46632f85adf, type: 3}
-  m_Name: EnemyStatusData
+  m_Script: {fileID: 11500000, guid: 7b540ae14ebb12f49ab27dc0a09a2a7a, type: 3}
+  m_Name: PlayerTweenFieldData
   m_EditorClassIdentifier: 
-  moveSpeed: 0
-  damageAmount: 1
-  score: 5
+  duration: 0.05
+  targetAlpha: 0
