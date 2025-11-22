@@ -11,16 +11,22 @@ namespace Game.Enemy
         GameObject owerObj { get; }
         UnityAction OnDeadAction { get; }
         EnemyStatusData _enemyStatusData { get; }
-        bool isDead { get; set;}
+        bool isDead { get; set; }
         Material meshMat { get; }
         void StateMachineSet();
         Collider enemyCollider { get; }
-    }
+        EnemyActionHelper<EnemyController> enemyActionHelper { get; }
 
+        EnemyAudioHelper<EnemyController> enemyAudioHelper { get; }
+    }
     [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(AudioSource))]
     public class EnemyController : MonoBehaviour, IEnemy, ISpawnableObj
     {
         [SerializeField] EnemyStatusData enemyStatusData;
+        [SerializeField] EnemyAudioDatas enemyAudioDatas;
+
+        [SerializeField] AudioSource audioSource;
         [SerializeField] EnemyIdleStateBase idleStateTemplate;
         [SerializeField] EnemyMoveStateBase moveStateTemplate;
         [SerializeField] EnemyDeathStateBase deathStateTemplate;
@@ -34,7 +40,10 @@ namespace Game.Enemy
         public Material meshMat { get; private set; }
         public bool isDead { get; set; } = false;
 
-        EnemyActionHelper<EnemyController> enemyActionHelper;
+        public EnemyActionHelper<EnemyController> enemyActionHelper { get; private set;}
+
+        public EnemyAudioHelper<EnemyController> enemyAudioHelper { get; private set; }
+
         void Start()
         {
             Initialize();
@@ -54,6 +63,13 @@ namespace Game.Enemy
             meshMat = renderer.material;
             StateMachineSet();
             enemyActionHelper = new EnemyActionHelper<EnemyController>(this);
+            AudioSetup();
+        }
+
+        void AudioSetup()
+        {
+            enemyAudioHelper = new EnemyAudioHelper<EnemyController>(this, audioSource, enemyAudioDatas);
+            enemyAudioHelper.PlayMoveAudio();
         }
         public void StateMachineSet()
         {

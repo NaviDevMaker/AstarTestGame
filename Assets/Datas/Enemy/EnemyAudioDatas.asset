@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abf2d77037fce3349aba9327205d08b8, type: 3}
-  m_Name: EnemyActionFieldData[
+  m_Script: {fileID: 11500000, guid: 41acb98fd6a3cf54d8eb5ea9130046ec, type: 3}
+  m_Name: EnemyAudioDatas
   m_EditorClassIdentifier: 
-  changeSpeed: 30
-  upAmount: 3
-  upDuration: 0.5
+  moveAudio: {fileID: 8300000, guid: 32fea287aeaed5d47ae563131ebc926b, type: 3}
+  deathAudio: {fileID: 8300000, guid: daa95b443f6373c4e812b3541d35fafc, type: 3}
+  hearableDistance: 10

@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 namespace Game.Enemy
 {
     [CreateAssetMenu]
@@ -11,13 +12,14 @@ namespace Game.Enemy
         {
             base.Initialize(stateMachine, owner, animator);
             animatorHash = Animator.StringToHash("isDead");
+            token = owner.owerObj.GetCancellationTokenOnDestroy();
         }
+        CancellationToken token;
         public override void OnEnter()
         {
             base.OnEnter();
             WaitDeadAction().Forget();
             Debug.Log($"Ž€–S,{owner.owerObj.name}");
-            //UnityEngine.Object.Destroy(owner.owerObj);
         }
         public override void OnExit()
         {
@@ -32,13 +34,27 @@ namespace Game.Enemy
         {
             try
             {
+                var actionHelper = owner.enemyActionHelper;
+                await actionHelper.MoveUpAction();
                 await UniTask.WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Death")
-                                        , cancellationToken: owner.owerObj.GetCancellationTokenOnDestroy());
-                await UniTask.WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f
-                                        , cancellationToken: owner.owerObj.GetCancellationTokenOnDestroy());
+                                        , cancellationToken:token);
+                var animationLength = GetStateAnimationLength();
+                owner.enemyAudioHelper.PlayDeathAudio(animationLength);
+                var fadeTask = actionHelper.FadeInAction(animationLength);
+                var normalizeWaitTask = UniTask.WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f
+                                      , cancellationToken:token);
+                await UniTask.WhenAll(fadeTask, normalizeWaitTask);
                 UnityEngine.Object.Destroy(owner.owerObj);
             }
             catch (OperationCanceledException) { }
+        }
+
+        float GetStateAnimationLength()
+        {
+            var clipName = "Death";
+            var clipLength = animator.GetControllerLength(clipName);
+            var stateSpeed = animator.GetStateSpeed(clipName);
+            return clipLength / stateSpeed;
         }
     }
 

@@ -41,6 +41,5 @@ namespace Game.Enemy
         }
         public void Update() => currentState?.OnUpdate();
     }
-
 }
 

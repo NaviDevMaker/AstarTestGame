@@ -19,6 +19,8 @@ namespace Game.Player
         bool isDead { get;}
         bool isInvincible { get; set;}
         List<Material[]> meshMats { get;}
+
+        PlayerAudioHelper audioHelper { get;}
      }
     public class PlayerController : MonoBehaviour,IAssetSetter,IPlayer<PlayerController>,IDamageable
     {
@@ -32,19 +34,24 @@ namespace Game.Player
         public PlayerItemPickUpState _playerItemPickUpState { get; private set;}
         PlayerStateMachineBase<PlayerController> currentState = null;
 
+        [SerializeField] AudioSource audioSource;
         [SerializeField] PlayerStatusData statusData;
+        [SerializeField] PlayerAudioDatas audioDatas;
         [SerializeField] PlayerTweenFieldDatas tweenFieldDatas;
         public PlayerStatusData playerStatusData => statusData;
         public PlayerTweenFieldDatas playerTweenFieldDatas => tweenFieldDatas;
         public Animator animator { get; private set; }
         public bool isDead { get; private set; }
         public IEnemy currentTarget { get; set;}
-        public UnityAction OnHitEnemyAction { get; set;}
+        public UnityAction OnHitEnemyAction { get; set;} 
         public int currentLife { get; set;}
         public bool isInvincible { get; set; }
         public Func<float,UniTask>OnDeadAction { get; set; }
         public List<Material[]> meshMats { get; private set; } = new List<Material[]>();
         public UnityAction<IEnemy> AddScoreAction { get; set; }
+        public PlayerAudioDatas AudioDatas => audioDatas;
+
+        public PlayerAudioHelper audioHelper { get; private set; }
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         async void Start()
@@ -69,6 +76,7 @@ namespace Game.Player
         void Initialize()
         {
             animator = GetComponent<Animator>();
+            audioHelper = new PlayerAudioHelper(audioDatas,audioSource);
             MaterialSetup();
             StateSetup();
             PlayerSetUp();
@@ -87,6 +95,12 @@ namespace Game.Player
         {
             currentLife = playerStatusData.Life;
             OnHitEnemyAction += _playerHitState.WaitInvincibleTime;
+            OnHitEnemyAction += audioHelper.PlayHittedAudio;
+            OnDeadAction += async(_) =>
+            {
+                audioHelper.PlayDeathAudio();
+                await UniTask.CompletedTask;
+            };
         }
         public void ChangeState(PlayerStateMachineBase<PlayerController> nextState)
         {
