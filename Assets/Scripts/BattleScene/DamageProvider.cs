@@ -34,8 +34,11 @@ public static class DamageProvider
             var shakeCameraProp = otherType.GetProperty("OnHitEnemyAction", BindingFlags.Instance | BindingFlags.Public);
             if (takeDamageMethod == null || shakeCameraProp == null) continue;
             var action = shakeCameraProp.GetValue(cmp) as UnityAction;
-            action?.Invoke();
+
+            //‚±‚êTakaDamage‚ÅHP‚ª‚OˆÈ‰º‚É‚È‚Á‚½‚ç—LŒø‚É‚È‚é‚©‚ç‚±‚Ì‡”ÔB
+            //‚±‚¤‚µ‚È‚¢‚Æ€‚ñ‚¾‚Æ‚«‚É€–S‚Ì‰¹‚ÆHit‚Ì‚Ì‰¹‚ª“¯‚É—¬‚ê‚¿‚á‚¤‚©‚ç
             takeDamageMethod.Invoke(cmp, new object[] { damage });
+            action?.Invoke();
             break;
         }
     }

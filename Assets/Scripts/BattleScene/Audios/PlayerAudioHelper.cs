@@ -4,14 +4,16 @@ namespace Game.Player
 {
     public class PlayerAudioHelper
     {
-        public PlayerAudioHelper(PlayerAudioDatas playerAudioDatas, AudioSource audioSource)
+        public PlayerAudioHelper(PlayerAudioDatas playerAudioDatas, AudioSource sfxAudioSource,AudioSource footAudioSource)
         {
             this.playerAudioDatas = playerAudioDatas;
-            this.audioSource = audioSource;
+            this.sfxAudioSource = sfxAudioSource;
+            this.footAudioSource = footAudioSource;
         }
 
         PlayerAudioDatas playerAudioDatas;
-        AudioSource audioSource;
+        AudioSource sfxAudioSource;
+        AudioSource footAudioSource;
 
         enum PlayerAudioType
         {
@@ -21,15 +23,21 @@ namespace Game.Player
             Death
         }
 
-        public void PlayFootAudio()
+        public void StartFootAudio()
         {
-            audioSource.clip = GetTargetAudioClip(PlayerAudioType.Foot);
-            audioSource.Play();
+            footAudioSource.clip = GetTargetAudioClip(PlayerAudioType.Foot);
+            footAudioSource.Play();
         }
-        public void PlayHittedAudio() => audioSource.PlayOneShot(GetTargetAudioClip(PlayerAudioType.Hitted));
 
-        public void PlayAttackAudio() => audioSource.PlayOneShot(GetTargetAudioClip(PlayerAudioType.Attack));
-        public void PlayDeathAudio() => audioSource.PlayOneShot(GetTargetAudioClip(PlayerAudioType.Death));
+        public void StopFootAudio() => footAudioSource.Stop();
+        public void PlayHittedAudio() => sfxAudioSource.PlayOneShot(GetTargetAudioClip(PlayerAudioType.Hitted));
+
+        public void PlayAttackAudio() => sfxAudioSource.PlayOneShot(GetTargetAudioClip(PlayerAudioType.Attack));
+        public void PlayDeathAudio()
+        {
+            StopFootAudio();
+            sfxAudioSource.PlayOneShot(GetTargetAudioClip(PlayerAudioType.Death));
+        }
 
         AudioClip GetTargetAudioClip(PlayerAudioType audioType)
         {

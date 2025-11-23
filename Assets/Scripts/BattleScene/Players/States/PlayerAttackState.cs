@@ -38,6 +38,7 @@ namespace Game.Player
                 controller.SetHashToFalse();
                 controller.animator.Play(animationClipName, layerIndex);
                 controller.animator.SetBool(animatorHash, true);
+                controller.audioHelper.PlayAttackAudio();
                 Func<bool> waitAttackAnim =  () =>
                 {
                     var isDead = controller.isDead;

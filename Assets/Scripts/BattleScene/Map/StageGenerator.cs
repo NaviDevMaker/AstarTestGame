@@ -5,6 +5,7 @@ using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
 using Cysharp.Threading.Tasks;
+using UnityEditor;
 
 namespace Game.Stage
 {
@@ -19,13 +20,17 @@ namespace Game.Stage
     public class StageGenerator : MonoBehaviour//,IAssetSetter
     {
         public static StageGenerator Instance { get; private set; }
+
+        [SerializeField] TreeSpawner treeSpawner;
+        [SerializeField] MapSettingDatas mapSettingDatas;
         [SerializeField] Terrain terrain;
         [SerializeField] ObjectState WallSetting;
         [SerializeField] ObjectState GroundSetting;
         [SerializeField] ObjectState RoadSetting;
 
         public ObjectState _WallSetting => WallSetting;
-        public Vector3 defaultPosition { get; private set;}
+       
+         public Vector3 defaultPosition { get; private set;}
 
         [Serializable]
         public class ObjectState
@@ -35,8 +40,8 @@ namespace Game.Stage
             public Material material;
         }
 
-        private int mapSizeW;        // マップの横サイズ
-        private int mapSizeH;        // マップの縦サイズ
+        private int mapSizeW = 0;        // マップの横サイズ
+        private int mapSizeH = 0;        // マップの縦サイズ
         public int[,] map { get; private set; }                           // マップの管理配列
 
         [SerializeField] private int roomNum;       // 部屋の数
@@ -79,15 +84,24 @@ namespace Game.Stage
         {
             SetMapsizeAndPosition();
             MapGenerate();
+            treeSpawner.SpawnTreeAroundStage(mapSizeW,mapSizeH,defaultPosition);
             //isInitialize = true;
         }
         void SetMapsizeAndPosition()
         {
-            TerrainData terrainData = terrain.terrainData;
-            mapSizeW = Mathf.RoundToInt(terrainData.size.x);
-            mapSizeH = Mathf.RoundToInt(terrainData.size.z);
-            Debug.Log($"Terrain Size = {mapSizeW} x {terrainData.size.y} x {mapSizeH}");
-            defaultPosition = terrain.GetPosition();
+            if (!mapSettingDatas.isSetuped)
+            {
+                TerrainData terrainData = terrain.terrainData;
+
+                if(!mapSettingDatas.IsSetupedSizeW) mapSettingDatas.mapSizeW = Mathf.RoundToInt(terrainData.size.x);
+                if(!mapSettingDatas.IsSetupedSizeH) mapSettingDatas.mapSizeH = Mathf.RoundToInt(terrainData.size.z);
+                if (!mapSettingDatas.IsSetupedDefaultPosition) mapSettingDatas.defaultPostion = terrain.GetPosition();
+                Debug.Log($"Terrain Size = {mapSizeW} x {terrainData.size.y} x {mapSizeH}");
+            }
+
+            mapSizeW = mapSettingDatas.mapSizeW;
+            mapSizeH = mapSettingDatas.mapSizeH;
+            defaultPosition = mapSettingDatas.defaultPostion;
         }
         // 生成用のオブジェクトを用意
         void initPrefab()

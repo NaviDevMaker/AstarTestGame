@@ -34,7 +34,7 @@ namespace Game.Player
         public PlayerItemPickUpState _playerItemPickUpState { get; private set;}
         PlayerStateMachineBase<PlayerController> currentState = null;
 
-        [SerializeField] AudioSource audioSource;
+        [SerializeField] AudioSources audioSources;
         [SerializeField] PlayerStatusData statusData;
         [SerializeField] PlayerAudioDatas audioDatas;
         [SerializeField] PlayerTweenFieldDatas tweenFieldDatas;
@@ -52,6 +52,17 @@ namespace Game.Player
         public PlayerAudioDatas AudioDatas => audioDatas;
 
         public PlayerAudioHelper audioHelper { get; private set; }
+
+        [Serializable]
+        class AudioSources
+        {
+            [SerializeField] AudioSource sfxAudioSource;
+            [SerializeField] AudioSource footAudioSource;
+
+            public AudioSource SfxAudioSource => sfxAudioSource;
+            public AudioSource FootAudioSource  => footAudioSource;
+        }
+
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         async void Start()
@@ -76,7 +87,9 @@ namespace Game.Player
         void Initialize()
         {
             animator = GetComponent<Animator>();
-            audioHelper = new PlayerAudioHelper(audioDatas,audioSource);
+            var sfxAudioSource = audioSources.SfxAudioSource;
+            var footAudioSource = audioSources.FootAudioSource;
+            audioHelper = new PlayerAudioHelper(audioDatas,sfxAudioSource,footAudioSource);
             MaterialSetup();
             StateSetup();
             PlayerSetUp();
@@ -95,7 +108,12 @@ namespace Game.Player
         {
             currentLife = playerStatusData.Life;
             OnHitEnemyAction += _playerHitState.WaitInvincibleTime;
-            OnHitEnemyAction += audioHelper.PlayHittedAudio;
+            OnHitEnemyAction += () =>
+            {
+                if (isDead) return;
+                audioHelper.PlayHittedAudio();
+            };
+                
             OnDeadAction += async(_) =>
             {
                 audioHelper.PlayDeathAudio();

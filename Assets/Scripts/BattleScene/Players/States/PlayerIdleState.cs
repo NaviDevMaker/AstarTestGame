@@ -7,6 +7,7 @@ namespace Game.Player
         public PlayerIdleState(PlayerController controller) : base(controller) { }
         public override void OnEnter()
         {
+            controller.audioHelper.StopFootAudio();
         }
 
         public override void OnExit()

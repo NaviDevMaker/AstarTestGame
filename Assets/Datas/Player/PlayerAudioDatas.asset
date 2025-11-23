@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: PlayerAudioDatas
   m_EditorClassIdentifier: 
   hittedAudio: {fileID: 8300000, guid: a53088d3d68e0ae4aa0f7fb85acc477f, type: 3}
-  attackAudio: {fileID: 0}
-  footAudio: {fileID: 0}
+  attackAudio: {fileID: 8300000, guid: f0d3bbf91dc9da24e992f6705da4bbaa, type: 3}
+  footAudio: {fileID: 8300000, guid: ca26f2d0abf76a444aa304168ec236b0, type: 3}
   deathAudio: {fileID: 8300000, guid: 2254d6d9213a9934fb2ee714a011f63e, type: 3}

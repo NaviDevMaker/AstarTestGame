@@ -19,6 +19,7 @@ namespace Game.Player
         int targetMask = -1;
         public override void OnEnter()
         {
+            controller.audioHelper.StartFootAudio();
             nextState = controller._playerIdleState;
         }
         public override void OnExit()
