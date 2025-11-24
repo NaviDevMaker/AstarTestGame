@@ -1,13 +1,16 @@
 using UnityEngine;
 using Game.SpawnableObj;
 using Game.Stage;
+using System.Collections.Generic;
+using Game.Enemy;
 namespace Game.Spawner
 {
     public class EnemySpawner : MonoBehaviour,ISpawner
     {
+        [SerializeField] int spawnableCount;
         SpawnHelper<EnemyGenerateSetting> spawnHelper;
         public SpawnerType spawnerType => SpawnerType.Enemy;
-
+        List<IEnemy> currentEnemys = new List<IEnemy>();
         public ISpawnableObj GetTargetObj()
         {
             var prefabSetting = spawnHelper.prefabGenerateSetting;
@@ -25,20 +28,17 @@ namespace Game.Spawner
             var spawnableObj = GetTargetObj();
             var prafabObj = spawnableObj.ownerObj;
             var enemy = Instantiate(prafabObj, pos, prafabObj.transform.rotation);
+            if (!enemy.TryGetComponent<IEnemy>(out var enemyInterface)) return;
+            currentEnemys.Add(enemyInterface);
+            enemyInterface.OnDeadAction += RemoveEnemy;
             spawnHelper.occupyMap[targetX, targetY] = 1;
-            //var node = new Vector2Int(targetX, targetY);
-        }
+        }     
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-
-        }
-
+        void RemoveEnemy(IEnemy enemy) => currentEnemys.Remove(enemy);
         // Update is called once per frame
         void Update()
         {
-            if (spawnHelper.IsReachedSpawnTime())
+            if (spawnHelper.IsReachedSpawnTime() && currentEnemys.Count < spawnableCount)
             {
                 if (spawnHelper.IsSpawnable(out var node)) Spawn(node.x, node.y);
             }

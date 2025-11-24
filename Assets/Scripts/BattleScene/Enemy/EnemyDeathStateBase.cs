@@ -40,7 +40,7 @@ namespace Game.Enemy
                                         , cancellationToken:token);
                 var animationLength = GetStateAnimationLength();
                 owner.enemyAudioHelper.PlayDeathAudio(animationLength);
-                var fadeTask = actionHelper.FadeInAction(animationLength);
+                var fadeTask = actionHelper.FadeAction(animationLength,startAlpha:1.0f,targetAlpha:0f);
                 var normalizeWaitTask = UniTask.WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f
                                       , cancellationToken:token);
                 await UniTask.WhenAll(fadeTask, normalizeWaitTask);

@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 
 
@@ -9,11 +11,18 @@ namespace Game.Enemy
         public override void Initialize(StateMachine stateMachine, IEnemy owner, Animator animator)
         {
             base.Initialize(stateMachine, owner, animator);
+            nextState = stateMachine.MoveState;
             animatorHash = Animator.StringToHash("isIdling");
         }
-        public override void OnEnter()
+        public override async void OnEnter()
         {
             base.OnEnter();
+            try
+            {
+                await owner.enemyActionHelper.SpawnAction();
+                stateMachine.ChangeState(nextState);
+            }
+            catch (OperationCanceledException) { }
         }
 
         public override void OnExit()
@@ -27,6 +36,8 @@ namespace Game.Enemy
         public override void OnUpdate()
         {
         }
+
+        
     }
 
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SigletonMonobehaiver<TMono> : MonoBehaviour where TMono : MonoBehaviour
 {
-    public TMono Instance { get; private set;}
+    public  static TMono Instance { get; private set;}
 
     protected virtual void Awake()
     {

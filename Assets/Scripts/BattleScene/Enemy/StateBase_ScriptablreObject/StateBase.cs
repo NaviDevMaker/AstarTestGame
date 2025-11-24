@@ -5,6 +5,7 @@ namespace Game.Enemy
     public abstract class StateBase : ScriptableObject
     {
         protected StateMachine stateMachine;
+        protected StateBase nextState;
         protected IEnemy owner;
         protected Animator animator;
         public int animatorHash { get; protected set; }

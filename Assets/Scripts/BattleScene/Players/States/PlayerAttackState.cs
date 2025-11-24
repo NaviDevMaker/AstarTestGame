@@ -55,7 +55,7 @@ namespace Game.Player
                     {
                         Debug.Log("taosu");
                         var currentTarget = controller.currentTarget;
-                        currentTarget.OnDeadAction?.Invoke();
+                        currentTarget.OnDeadAction?.Invoke(currentTarget);
                         controller.AddScoreAction?.Invoke(currentTarget);
                         controller.currentTarget = null;
                         break;

@@ -11,12 +11,10 @@ namespace Game.Enemy
         public EnemyDeathStateBase DeathState { get; private set; }
 
         IEnemy owner;
-        Animator animator;
         public StateMachine(IEnemy owner, Animator animator,
                           EnemyIdleStateBase idleState, EnemyMoveStateBase moveState, EnemyDeathStateBase deathState)
         {
             this.owner = owner;
-            this.animator = animator;
             this.IdleState = idleState;
             this.MoveState = moveState;
             this.DeathState = deathState;

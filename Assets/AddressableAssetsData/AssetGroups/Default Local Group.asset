@@ -30,6 +30,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3529a26d711deae488b20ada0c306f9a
+    m_Address: Prefabs/Effects/SpawnSmoke
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 46a02c419531270468638cfb8813d618
     m_Address: Prefabs/LifeImage
     m_ReadOnly: 0

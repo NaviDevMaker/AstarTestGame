@@ -19,7 +19,6 @@ namespace Game.Spawner
         SpawnerType spawnerType { get;}
 
         ISpawnableObj  GetTargetObj();
-
         void Initialize();
     }
     public enum SpawnerType
@@ -35,9 +34,11 @@ namespace Game.Spawner
         float elapsedTime = 0f;
         string address;
         public TPrefabData prefabGenerateSetting { get; private set;}
+        SpawnerType spawnerType;
         public SpawnHelper(SpawnerType spawnerType) => Initialize(spawnerType).Forget();
         async UniTask Initialize(SpawnerType spawnerType)
         {
+            this.spawnerType = spawnerType;
             var map = StageGenerator.Instance.map;
             var xLength = map.GetLength(0);
             var yLength = map.GetLength(1);
@@ -60,7 +61,9 @@ namespace Game.Spawner
             var targetX = randomNode.x;
             var targetY = randomNode.y;
             var isWall = StageMethods.IsWall(targetX, targetY);
-            var isSpawnable = IsSpawnableOnMap(targetX, targetY);
+            var isSpawnable = spawnerType == SpawnerType.Item 
+                                             ? IsSpawnableOnMap(targetX, targetY)
+                                             : true;
             if (isWall || !isSpawnable) return false;
             elapsedTime = 0f;
             node = new Vector2Int(targetX, targetY);

@@ -64,7 +64,7 @@ namespace Game.Player
             base.Initialize();
             moveSpeed = controller.playerStatusData.MoveSpeed;
             rotateSpeed = controller.playerStatusData.RotateSpeed;
-            targetMask = Layers.enemyLayer | Layers.wallLayer;
+            targetMask =  Layers.wallLayer;//Layers.enemyLayer |
         }
         bool IsWalkable(Vector3 direction)
         {

@@ -27,11 +27,18 @@ namespace Game.Spawner
             var spawnableObj = GetTargetObj();
             var prafabObj = spawnableObj.ownerObj;
             var item = Instantiate(prafabObj, pos, prafabObj.transform.rotation);
-            if (item.TryGetComponent<IPickupedItem>(out var pickupedItem)) pickupedItem.AfterPickUpedItem += ReturnNoItemStatus;
+            if (item.TryGetComponent<IPickupedItem>(out var pickupedItem)) pickupedItem.AfterPickUpedItem
+                                      += ReturnNoItemStatus;
             spawnHelper.occupyMap[targetX, targetY] = 1;
             var node = new Vector2Int(targetX, targetY);
             pickupedItem.myMapNode = node;
            
+        }
+        public void ReturnNoItemStatus(Vector2Int itemMapNode)
+        {
+            var x = itemMapNode.x;
+            var y = itemMapNode.y;
+            spawnHelper.occupyMap[x, y] = 0;
         }
         public ISpawnableObj GetTargetObj()
         {
@@ -40,12 +47,6 @@ namespace Game.Spawner
             prefabSetting.Prefabs.ForEach(p => Debug.Log($"ƒvƒŒ‚Ó‚Ÿ‚Ô‚Ì–¼‘O : {p}"));
             var r = UnityEngine.Random.Range(0, itemLength);
             return prefabSetting.Prefabs[r];
-        }
-        void ReturnNoItemStatus(Vector2Int itemMapNode)
-        {
-            var x = itemMapNode.x;
-            var y = itemMapNode.y;
-            spawnHelper.occupyMap[x, y] = 0;
         }
     }
 }

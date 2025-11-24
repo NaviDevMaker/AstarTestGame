@@ -9,7 +9,7 @@ namespace Game.Enemy
     public interface IEnemy
     {
         GameObject owerObj { get; }
-        UnityAction OnDeadAction { get; }
+        UnityAction<IEnemy> OnDeadAction { get; set;}
         EnemyStatusData _enemyStatusData { get; }
         bool isDead { get; set; }
         Material meshMat { get; }
@@ -32,18 +32,15 @@ namespace Game.Enemy
         [SerializeField] EnemyDeathStateBase deathStateTemplate;
 
         StateMachine stateMachine;
-        public UnityAction OnDeadAction { get; private set; }
+        public UnityAction<IEnemy> OnDeadAction { get; set; }
         public GameObject owerObj => this.gameObject;
         public Collider enemyCollider { get; private set; }
         public EnemyStatusData _enemyStatusData => enemyStatusData;
         public GameObject ownerObj => gameObject;
         public Material meshMat { get; private set; }
         public bool isDead { get; set; } = false;
-
         public EnemyActionHelper<EnemyController> enemyActionHelper { get; private set;}
-
         public EnemyAudioHelper<EnemyController> enemyAudioHelper { get; private set; }
-
         void Start()
         {
             Initialize();
@@ -61,11 +58,10 @@ namespace Game.Enemy
             enemyCollider = GetComponentInChildren<Collider>();
             var renderer = GetComponentInChildren<SkinnedMeshRenderer>();
             meshMat = renderer.material;
-            StateMachineSet();
             enemyActionHelper = new EnemyActionHelper<EnemyController>(this);
+            StateMachineSet();
             AudioSetup();
         }
-
         void AudioSetup()
         {
             enemyAudioHelper = new EnemyAudioHelper<EnemyController>(this, audioSource, enemyAudioDatas);
@@ -78,7 +74,7 @@ namespace Game.Enemy
             var move = moveStateTemplate.Clone<EnemyMoveStateBase>();
             var death = deathStateTemplate.Clone<EnemyDeathStateBase>();
             stateMachine = new StateMachine(this, animator, idle, move, death);
-            OnDeadAction = stateMachine.ChangeToDeathState;
+            OnDeadAction += (_) => stateMachine.ChangeToDeathState();
             stateMachine.ChangeState(idle);
         }
     }

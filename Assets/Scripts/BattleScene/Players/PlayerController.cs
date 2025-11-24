@@ -19,7 +19,7 @@ namespace Game.Player
         bool isDead { get;}
         bool isInvincible { get; set;}
         List<Material[]> meshMats { get;}
-
+        static TPlayer instance { get;}//interface‚àstatic‚¢‚¯‚é‚ç‚µ‚¢
         PlayerAudioHelper audioHelper { get;}
      }
     public class PlayerController : MonoBehaviour,IAssetSetter,IPlayer<PlayerController>,IDamageable
@@ -52,6 +52,8 @@ namespace Game.Player
         public PlayerAudioDatas AudioDatas => audioDatas;
 
         public PlayerAudioHelper audioHelper { get; private set; }
+
+        public static PlayerController instance { get; private set; }
 
         [Serializable]
         class AudioSources
@@ -106,6 +108,7 @@ namespace Game.Player
         }
         void PlayerSetUp()
         {
+            instance = this;
             currentLife = playerStatusData.Life;
             OnHitEnemyAction += _playerHitState.WaitInvincibleTime;
             OnHitEnemyAction += () =>
