@@ -1,5 +1,6 @@
 using UnityEngine;
 using Game.Player;
+using Game.Stage;
 public class PosaitionSetUper : MonoBehaviour
 {
     [SerializeField] CameraMover topViewCameraMover;
@@ -7,14 +8,13 @@ public class PosaitionSetUper : MonoBehaviour
     public void Initialize(Transform playerTra)
     {
         terrain = Terrain.activeTerrain;
-        SetPlayerPos(out var offset,playerTra);
+        SetPlayerPos(playerTra);
         //SetTerrainPos(offset);
     }
-    void SetPlayerPos(out Vector3 playerOffset,Transform playerTra)
+    void SetPlayerPos(Transform playerTra)
     {
-        playerOffset = default;
-
-        var defaultPos = terrain.transform.position;
+        var instance = StageGenerator.Instance;
+        var defaultPos = instance.defaultPosition;//terrain.transform.position;
         var y = topViewCameraMover.transform.position.y;
         //var topViewTargetPos = defaultPos;
         //topViewTargetPos.y += y;
@@ -23,9 +23,9 @@ public class PosaitionSetUper : MonoBehaviour
         //terrainOffset.y = 0f;
         //var origin = topViewCamera.transform.position + terrainOffset;
         var direction = Vector3.down;
-        var size = terrain.terrainData.size;
-        var x = size.x;
-        var h = size.y;
+        //var size = terrain.terrainData.size;
+        var x = instance.map.GetLength(0);
+        var h = instance.map.GetLength(1);
         var originOffset = defaultPos + Vector3.up * y;
         for (int i = 0; i < x; i++)
         {
@@ -36,10 +36,8 @@ public class PosaitionSetUper : MonoBehaviour
                 {
                     if (1 << hit.collider.gameObject.layer != Layers.groundLayer) continue;
                     Debug.Log("Œ©‚Â‚¯‚½‚æ");
-                    var point = hit.point;
-                    playerOffset = point - playerTra.position;
-                    playerOffset.y = 0f;
-                    var targetPos = point;
+                    var node = new Vector2Int(i,j);
+                    var targetPos = StageMethods.GetTargetNodePos(new MapPositionInfo(node.x,node.y));
                     targetPos.y = terrain.SampleHeight(targetPos);
                     playerTra.position = targetPos;
                     var topViewTargetPos = targetPos + Vector3.up * y;

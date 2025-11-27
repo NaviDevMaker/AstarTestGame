@@ -21,13 +21,13 @@ namespace Game.Stage
     {
         public static StageGenerator Instance { get; private set; }
 
-        [SerializeField] TreeSpawner treeSpawner;
+        [SerializeField] EnvironmentSpawner environmentSpawner;
         [SerializeField] MapSettingDatas mapSettingDatas;
         [SerializeField] Terrain terrain;
         [SerializeField] ObjectState WallSetting;
         [SerializeField] ObjectState GroundSetting;
         [SerializeField] ObjectState RoadSetting;
-
+        [SerializeField] GameObject roofObj;
         public ObjectState _WallSetting => WallSetting;
        
          public Vector3 defaultPosition { get; private set;}
@@ -84,7 +84,14 @@ namespace Game.Stage
         {
             SetMapsizeAndPosition();
             MapGenerate();
-            treeSpawner.SpawnTreeAroundStage(mapSizeW,mapSizeH,defaultPosition);
+            var spawnInfo = new EnvironmentSpawnerInfo 
+            { 
+                mapSizeH = this.mapSizeH,
+                mapSizeW = this.mapSizeW,
+                defaultPos = this.defaultPosition,
+                terrain = this.terrain,
+            };
+            environmentSpawner.SpawnAll(spawnInfo);
             //isInitialize = true;
         }
         void SetMapsizeAndPosition()
@@ -522,6 +529,7 @@ namespace Game.Stage
             ShortRoadCreate();
             ConnectEachRoad();
             GenerateEachObjects();
+            SetRoof();
         }
 
         void GenerateEachObjects()
@@ -601,5 +609,17 @@ namespace Game.Stage
         //    groundObj.SetActive(false);
         //    mapObjects = new GameObject[]{ groundObj,wallObj,roadObj};
         //}
+
+        void SetRoof()
+        {
+            var roofParent = new GameObject("RoofParent").transform;
+            var adjust = 1.5f;
+            var x = mapSizeW / 2 + defaultPosition.x;
+            var z = mapSizeH / 2 + defaultPosition.z;
+            var y = WallSetting.size.y + defaultPosition.y + adjust;
+            var pos = new Vector3(x, y, z);
+            Instantiate(roofObj, pos, Quaternion.identity,roofParent);
+        }
+
     }
 }

@@ -105,7 +105,8 @@ namespace Game.Enemy
         public async UniTask ChaseLooper(CancellationTokenSource chaseEndCts)
         {
             CancellationTokenSource moveCts = null;
-
+            var distBasedSqr = actionFieldDatas.DistBasedSqr;
+            //var isChangingPathes = false;
             try
             {
                 while (!chaseEndCts.IsCancellationRequested)
@@ -118,24 +119,29 @@ namespace Game.Enemy
                     var worldStart = owner.transform.position;
                     var worldGoal = targetPlayer.transform.position;
 
+                    //if (isChangingPathes)
+                    //{
+                    //    await UniTask.Delay(TimeSpan.FromSeconds(1.0f), cancellationToken: chaseEndCts.Token);
+                    //    isChangingPathes = false;
+                    //}
                     var pathes = await aStarPathFinder.SearchPathAsync(
                         worldStart,
                         worldGoal,
                         chaseEndCts.Token
                     );
-
+                    if (pathes == null || pathes.Count == 0) continue;
                     // 移動開始
                     MoveToTarget(pathes, moveCts).Forget();
-
-                    // ★ プレイヤーが「一定距離動いたら」再探索する
-                    Vector3 originalGoal = worldGoal;
 
                     await UniTask.WaitUntil(
                         () =>
                         {
                             // 1.5f 以上動いたら
-                            float dist = (targetPlayer.transform.position - originalGoal).sqrMagnitude;
-                            return dist > 1.5f;
+                            float dist = (targetPlayer.transform.position - worldGoal).sqrMagnitude;
+                            return dist > distBasedSqr;
+                            //var isContinuable = dist > 1.5f;
+                            //if(isContinuable) isChangingPathes = true;
+                            //return isChangingPathes;
                         },
                         cancellationToken: chaseEndCts.Token
                     );
@@ -167,7 +173,7 @@ namespace Game.Enemy
                 }
             }
             catch (OperationCanceledException) { }
-           
+            catch (ObjectDisposedException) { }          
         }
     }
 }

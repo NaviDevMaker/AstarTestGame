@@ -15,3 +15,4 @@ MonoBehaviour:
   changeSpeed: 30
   upAmount: 3
   upDuration: 0.5
+  distBasedSqr: 0.75

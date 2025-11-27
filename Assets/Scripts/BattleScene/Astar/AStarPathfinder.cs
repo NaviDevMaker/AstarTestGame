@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using Game.Stage;
 
 /// <summary>
 /// スレッド対応・高速版 A* パスファインダー
@@ -54,7 +55,7 @@ public class AStarPathFinder
         Vector2Int goalMap = WorldToMap(worldGoal);
 
         // ② 重い A* 計算は別スレッドで実行（Unity API 禁止）
-        List<Vector2Int> mapPath = await UniTask.Run(() =>
+        List<Vector2Int> mapPath = await UniTask.RunOnThreadPool(() =>
         {
             return SearchOnGrid(startMap, goalMap, token);
         }, cancellationToken: token);
@@ -68,7 +69,8 @@ public class AStarPathFinder
         var worldPath = new List<Vector3>(mapPath.Count);
         foreach (var p in mapPath)
         {
-            worldPath.Add(MapToWorld(p.x, p.y));
+            var mapInfo = new MapPositionInfo(p.x,p.y);
+            worldPath.Add(StageMethods.GetTargetNodePos(mapInfo));
         }
 
         return worldPath;
@@ -83,25 +85,6 @@ public class AStarPathFinder
         int x = Mathf.FloorToInt(world.x - defaultPos.x);
         int z = Mathf.FloorToInt(world.z - defaultPos.z);
         return new Vector2Int(x, z);
-    }
-
-    // マップ配列座標 → ワールド座標（Terrain.activeTerrain 使用）
-    Vector3 MapToWorld(int x, int z)
-    {
-        // XZ は 1マス = 1 UnityUnit 前提
-        Vector3 pos = new Vector3(x + defaultPos.x, 0, z + defaultPos.z);
-
-        // ★ ここが Unity API → メインスレッドでのみ呼ぶ！
-        if (Terrain.activeTerrain != null)
-        {
-            pos.y = Terrain.activeTerrain.SampleHeight(pos) + defaultPos.y;
-        }
-        else
-        {
-            pos.y = defaultPos.y;
-        }
-
-        return pos;
     }
 
     // ===== ここから下は「純計算の A*」部分（Unity API 一切禁止） =====

@@ -16,9 +16,7 @@ namespace Game.Enemy
         PlayerInfo playerInfo;
         public static TargetManager Instance { get; private set; }
         private void Awake() => Instance = this;
-
         private void Start() => Initialize();
-
         void Initialize()
         {
             var attackAngle = player.playerStatusData.AttackAngle;

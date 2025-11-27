@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.Stage
 {
-    public class TreeSpawner : MonoBehaviour
+    public class TreeSpawner : EnvironmentSpawnerBase
     {
         [SerializeField] GameObject treePrefab;
 
@@ -13,7 +13,6 @@ namespace Game.Stage
         [SerializeField] int margin_NextToWall;
         [SerializeField] int treeCount;
 
-        Terrain terrain;
         int spawnTreeCount;
         enum DirectionType
         { 
@@ -23,17 +22,20 @@ namespace Game.Stage
             Bottom = 3,
         }
 
-        public void SpawnTreeAroundStage(int mapSizeW,int mapSizeH,Vector3 defaultPos)
+        public override void SpawnObjectAroundStage(EnvironmentSpawnerInfo environmentSpawnerInfo)
         {
             var treeParent = new GameObject("TreeParent").transform;
             spawnTreeCount = treeCount / 4;
-            terrain = Terrain.activeTerrain;
+            var terrain = environmentSpawnerInfo.terrain;
             var terrainPos = terrain.transform.position;
             var terrainSize = terrain.terrainData.size;
+            var mapSizeW = environmentSpawnerInfo.mapSizeW;
+            var mapSizeH = environmentSpawnerInfo.mapSizeH;
+            var defaultPos = environmentSpawnerInfo.defaultPos;
             for (int i = 0; i < Enum.GetValues(typeof(DirectionType)).Length; i++)
             {
                 DirectionType directionType = (DirectionType)i;
-                var tople = GetMinAndMax(terrainPos,mapSizeW, mapSizeH, terrainSize,defaultPos,directionType);
+                var tople = GetMinAndMax(terrainPos, mapSizeW, mapSizeH, terrainSize,defaultPos,directionType);
                 SpawnTree(tople.minX,tople.minZ,tople.maxX,tople.maxZ,treeParent);
             }
         }
