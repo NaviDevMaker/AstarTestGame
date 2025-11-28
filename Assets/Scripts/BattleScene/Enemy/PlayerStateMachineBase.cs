@@ -13,7 +13,9 @@ namespace Game.Player
         protected int animatorHash { get; private set; }
         protected string animationClipName { get; private set;}
 
-        protected float length { get; private set; }
+        protected float rowLength { get; private set; }
+        protected float stateSpeed {  get; private set; }
+        protected float animLength { get;private set; } 
         public TPlayer controller { get; private set; }
         public PlayerStateMachineBase<TPlayer> nextState { get; protected set; }
         public virtual void Initialize()
@@ -22,7 +24,9 @@ namespace Game.Player
             var info = controller.GetAnimInfo(this);
             this.animatorHash = info.hash;
             this.animationClipName = info.clipName;
-            this.length = info.length;
+            this.rowLength = info.length;
+            this.stateSpeed = info.stateSpeed;
+            this.animLength = rowLength / stateSpeed;
         }
         public abstract void OnEnter();
         public abstract void OnUpdate();

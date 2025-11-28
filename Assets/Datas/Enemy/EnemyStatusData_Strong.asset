@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06485440d021ea24d84fb46632f85adf, type: 3}
-  m_Name: EnemyStatusData
+  m_Name: EnemyStatusData_Strong
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 4
   damageAmount: 1
-  score: 5
+  score: 15
+  visibleDistBasedSqr: 25

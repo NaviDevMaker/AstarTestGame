@@ -52,6 +52,7 @@ namespace Game.Enemy
             stateMachine?.Update();
             if (isDead) return;
             TargetManager.Instance.SetCurrentTarget(this);
+            enemyActionHelper?.ChangeVisible();
         }
         void Initialize()
         {

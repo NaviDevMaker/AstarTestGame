@@ -7,7 +7,7 @@ namespace Game.Effect.Smoke
     public class SmokeEffect : IAssetSetter,IEffect
     {
         public SmokeEffect() { GetAsset().Forget(); }
-        ParticleSystem smokeEffect;
+       public ParticleSystem effect { get; private set;}
 
         public float destroyTime => 2.0f;
 
@@ -15,12 +15,11 @@ namespace Game.Effect.Smoke
         {
             var smokeObj = await GetAssetsMethods.GetAsset<GameObject>("Prefabs/Effects/SpawnSmoke");
             if (smokeObj == null) throw new System.NullReferenceException("The object is null!!");
-            smokeEffect = smokeObj.GetComponent<ParticleSystem>();
+            effect = smokeObj.GetComponent<ParticleSystem>();
         }
-
-        public ParticleSystem GetSmokeEffect(Vector3 pos,Quaternion rot = default,Transform parent = null,bool autoDestroy = true)
+        public ParticleSystem GetEffect(Vector3 pos,Quaternion rot = default,Transform parent = null,bool autoDestroy = true)
         {
-            var effect = UnityEngine.Object.Instantiate(smokeEffect, pos, rot, parent);
+            var effect = UnityEngine.Object.Instantiate(this.effect, pos, rot, parent);
             if (autoDestroy) AutoDestroy(effect).Forget();
             return effect;
         }

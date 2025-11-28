@@ -12,9 +12,11 @@ namespace Game.Player
 {
     public interface IPlayer<TPlayer> : IDamageable where TPlayer : MonoBehaviour, IPlayer<TPlayer>
     {
-        (int hash,string clipName,float length) GetAnimInfo(PlayerStateMachineBase<TPlayer> stateMachineBase);
+        (int hash,string clipName,float length,float stateSpeed) GetAnimInfo(PlayerStateMachineBase<TPlayer> stateMachineBase);
         UnityAction OnHitEnemyAction { get; set;}
         Func<float,UniTask> OnDeadAction { get; set;}
+
+        Func<float,UniTask> OnAttackingAction { get; set;}
         UnityAction<IEnemy> AddScoreAction { get; set;}
         bool isDead { get;}
         bool isInvincible { get; set;}
@@ -54,6 +56,7 @@ namespace Game.Player
         public PlayerAudioHelper audioHelper { get; private set; }
 
         public static PlayerController instance { get; private set; }
+        public Func<float, UniTask> OnAttackingAction { get; set; }
 
         [Serializable]
         class AudioSources
@@ -135,14 +138,23 @@ namespace Game.Player
             if (animData == null) throw new System.Exception();
             animationData = animData;
         }
-        public (int hash,string clipName,float length) GetAnimInfo(PlayerStateMachineBase<PlayerController> stateMachineBase)
+        public (int hash,string clipName
+              ,float length,float stateSpeed) GetAnimInfo(PlayerStateMachineBase<PlayerController> stateMachineBase)
         {
             return stateMachineBase switch
             {
-                PlayerWalkState => (animationData.WalkHash,animationData.WalkClipName,animator.GetControllerLength(animationData.WalkClipName)),
-                PlayerAttackState => (animationData.AttackHash,animationData.AttackClipName,animator.GetControllerLength(animationData.AttackClipName)),
-                PlayerItemPickUpState => (animationData.PickUpHash,animationData.PickUpClipName,animator.GetControllerLength(animationData.PickUpClipName)),
-                PlayerDeathState => (animationData.DeathHash,animationData.DeathClipName,animator.GetControllerLength(animationData.DeathClipName)),
+                PlayerWalkState => (animationData.WalkHash,animationData.WalkClipName
+                                   ,animator.GetControllerLength(animationData.WalkClipName)
+                                   ,animator.GetStateSpeed(animationData.WalkClipName)),
+                PlayerAttackState => (animationData.AttackHash,animationData.AttackClipName
+                                     ,animator.GetControllerLength(animationData.AttackClipName)
+                                     ,animator.GetStateSpeed(animationData.AttackClipName)),
+                PlayerItemPickUpState => (animationData.PickUpHash,animationData.PickUpClipName
+                                          ,animator.GetControllerLength(animationData.PickUpClipName)
+                                          ,animator.GetStateSpeed(animationData.PickUpClipName)),
+                PlayerDeathState => (animationData.DeathHash,animationData.DeathClipName
+                                    ,animator.GetControllerLength(animationData.DeathClipName)
+                                    ,animator.GetStateSpeed(animationData.DeathClipName)),
                 _ => default
             };
         }

@@ -14,6 +14,7 @@ namespace Game.Enemy
 
         [Header(" A* get new pathes distance")]
         [SerializeField] float distBasedSqr;
+
         public float ChangeSpeed => changeSpeed;
         public float UpAmount => upAmount;
         public float UpDuration  => upDuration;

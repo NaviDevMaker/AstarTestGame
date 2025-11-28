@@ -18,6 +18,7 @@ namespace Game.Enemy
         public override void OnEnter()
         {
             base.OnEnter();
+            owner.owerObj.SetLayerInChildren(default);
             WaitDeadAction().Forget();
             Debug.Log($"Ž€–S,{owner.owerObj.name}");
         }

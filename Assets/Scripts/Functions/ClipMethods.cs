@@ -31,7 +31,9 @@ public static class ClipMethods
         {
             foreach (var state in layer.stateMachine.states)
             {
-                if(state.state.motion.name == targetClipName)
+                var motion = state.state.motion;
+                if (motion == null) continue;
+                if(motion.name == targetClipName)
                 {
                     return state.state.speed;
                 }

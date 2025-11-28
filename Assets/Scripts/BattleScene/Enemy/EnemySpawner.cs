@@ -3,6 +3,8 @@ using Game.SpawnableObj;
 using Game.Stage;
 using System.Collections.Generic;
 using Game.Enemy;
+using NUnit.Framework.Internal;
+using UnityEngine.Events;
 namespace Game.Spawner
 {
     public class EnemySpawner : MonoBehaviour,ISpawner
@@ -11,11 +13,12 @@ namespace Game.Spawner
         SpawnHelper<EnemyGenerateSetting> spawnHelper;
         public SpawnerType spawnerType => SpawnerType.Enemy;
         List<IEnemy> currentEnemys = new List<IEnemy>();
+        public UnityAction<bool> OnChangeCount { get; set; }
         public ISpawnableObj GetTargetObj()
         {
             var prefabSetting = spawnHelper.prefabGenerateSetting;
-            var itemLength = prefabSetting.EnemyPrefabs.Count;
-            var r = UnityEngine.Random.Range(0, itemLength);
+            var enemyLength = prefabSetting.EnemyPrefabs.Count;
+            var r = UnityEngine.Random.Range(0, enemyLength);
             return prefabSetting.EnemyPrefabs[r];
         }
 
@@ -29,8 +32,14 @@ namespace Game.Spawner
             var prafabObj = spawnableObj.ownerObj;
             var enemy = Instantiate(prafabObj, pos, prafabObj.transform.rotation);
             if (!enemy.TryGetComponent<IEnemy>(out var enemyInterface)) return;
+
             currentEnemys.Add(enemyInterface);
-            enemyInterface.OnDeadAction += RemoveEnemy;
+            OnChangeCount?.Invoke(false);
+            enemyInterface.OnDeadAction += (enemy) =>
+            {
+                RemoveEnemy(enemy);
+                OnChangeCount?.Invoke(true);
+            };
             spawnHelper.occupyMap[targetX, targetY] = 1;
         }     
 

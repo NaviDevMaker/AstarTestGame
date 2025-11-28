@@ -1,6 +1,8 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
+using Game.Enemy;
+using Game.Effect;
 
 public interface IAnimatorLayer
 { 
@@ -35,6 +37,7 @@ namespace Game.Player
             try
             {
                 isAttacking = true;
+                controller.OnAttackingAction(animLength).Forget();
                 controller.SetHashToFalse();
                 controller.animator.Play(animationClipName, layerIndex);
                 controller.animator.SetBool(animatorHash, true);
@@ -55,8 +58,10 @@ namespace Game.Player
                     {
                         Debug.Log("taosu");
                         var currentTarget = controller.currentTarget;
+                        EffectManager.Instance.hitEffect.SpawnHitEffect(currentTarget.owerObj);
                         currentTarget.OnDeadAction?.Invoke(currentTarget);
                         controller.AddScoreAction?.Invoke(currentTarget);
+                        HitStopManager.Instance.HitStop(0.5f).Forget();
                         controller.currentTarget = null;
                         break;
                     }

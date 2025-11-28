@@ -24,6 +24,7 @@ namespace Game.Enemy
             aStarPathFinder = new AStarPathFinder(map,defaultPos);
             targetPlayer = PlayerController.instance;
             moveSpeed = owner._enemyStatusData.MoveSpeed;
+            visibleDistBasedSqr = owner._enemyStatusData.VisibleDistBasedSqr;
             GetAsset().Forget();
         }
 
@@ -33,6 +34,7 @@ namespace Game.Enemy
         CancellationToken token;
         AStarPathFinder aStarPathFinder;
         float moveSpeed = 0f;
+        float visibleDistBasedSqr = 0f;
         public async UniTask StartTranslusentAction()
         {
             await UniTask.WaitUntil(() => actionFieldDatas != null,cancellationToken:token);
@@ -89,26 +91,32 @@ namespace Game.Enemy
         {
             try
             {
-                var pos = owner.transform.position;
-                var parent = owner.transform;
-                var smokeEffect = EffectManager.Instance.smokeEffect.GetSmokeEffect(pos, parent: parent);
-                var main = smokeEffect.main;
-                var simulationSpeed = main.simulationSpeed;
-                var rawDuration = main.duration;
-                var length = rawDuration / simulationSpeed;
-                smokeEffect.Play();
+                SpawnSmokeEffect(out var length,owner.transform);
                 await FadeAction(length,startAlpha:0f,targetAlpha:1.0f);
             }
             catch (OperationCanceledException) { throw; }
         }
-
+        void SpawnSmokeEffect(out float length,Transform parent = null)
+        {
+            var pos = owner.transform.position;
+            //var parent = owner.transform;
+            var smokeEffect = EffectManager.Instance.smokeEffect.GetEffect(pos, parent:parent);
+            var main = smokeEffect.main;
+            var simulationSpeed = main.simulationSpeed;
+            var rawDuration = main.duration;
+            length = rawDuration / simulationSpeed;
+            smokeEffect.Play();
+        }
         public async UniTask ChaseLooper(CancellationTokenSource chaseEndCts)
         {
-            CancellationTokenSource moveCts = null;
-            var distBasedSqr = actionFieldDatas.DistBasedSqr;
+            
             //var isChangingPathes = false;
             try
             {
+                await UniTask.WaitUntil(() => actionFieldDatas != null
+                                        , cancellationToken: token);
+                CancellationTokenSource moveCts = null;
+                var distBasedSqr = actionFieldDatas.DistBasedSqr;
                 while (!chaseEndCts.IsCancellationRequested)
                 {
                     // ★ 前の移動をキャンセル
@@ -155,14 +163,18 @@ namespace Game.Enemy
             
             try
             {
+                var doubleCts = CancellationTokenSource.CreateLinkedTokenSource(moveCts.Token,token);
                 foreach (var path in pathes)
-                {
+                { 
+                    //if (owner == null) break;
                     //今までなんとなくで使ってたからよくない、これsqrは距離の２乗値でこのような比較の時には実際の距離は必要ない
                     //だからsqrを使う、magunitudeだと√magunitudeを内部的に計算するから遅くなる
                     //ちなみにこの0.2fは距離で言うと0.45fでそれを２乗した値、つまり0.45fｍ未満になるまでという意味になる、だからそこは任意
-                    while((path - owner.transform.position).sqrMagnitude > 0.1f)
+                    while(true)
                     {
-                        moveCts.Token.ThrowIfCancellationRequested();
+                        doubleCts.Token.ThrowIfCancellationRequested();
+                        if (owner == null || owner.gameObject == null) return;
+                        if ((path - owner.transform.position).sqrMagnitude <= 0.1f) break;
                         var move = Vector3.MoveTowards(owner.transform.position, path, moveSpeed * Time.deltaTime);
                         var dir = (move - owner.transform.position).normalized;
                         if(dir != Vector3.zero) owner.transform.rotation = Quaternion.LookRotation(dir);
@@ -175,6 +187,16 @@ namespace Game.Enemy
             catch (OperationCanceledException) { }
             catch (ObjectDisposedException) { }          
         }
+        public void ChangeVisible()
+        {
+            var dist = (targetPlayer.transform.position - owner.transform.position).sqrMagnitude;
+            var previousLayer = owner.gameObject.layer;
+            var targetLayer = -1;
+            if (dist < visibleDistBasedSqr) targetLayer = Layers.transpaEnemyLayer_NameTo;
+            else targetLayer = Layers.transluEnemyLayer_NameTo;
+            if(previousLayer != targetLayer) SpawnSmokeEffect(out var _);
+            owner.gameObject.SetLayerInChildren(targetLayer);
+        }      
     }
 }
 

@@ -26,13 +26,13 @@ namespace Game.Player
             {
                 await UniTask.WaitUntil(() => animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(animationClipName)
                                          , cancellationToken: token);
-                var stateSpeed = animator.GetCurrentAnimatorStateInfo(0).speed;
-                var duration = this.length * stateSpeed;
+                //var stateSpeed = animator.GetCurrentAnimatorStateInfo(0).speed;
+                //var duration = this.rowLength * stateSpeed;
                 var targetPos = controller.transform.position + downOffset;
                 var ease = Ease.Linear;
-                var moveSet = new Vector3TweenSetup(targetPos, duration, ease);
+                var moveSet = new Vector3TweenSetup(targetPos,animLength, ease);
                 var moveTask = controller.gameObject.Mover(moveSet).ToUniTask(cancellationToken: token);
-                var fpsCameraTask = controller.OnDeadAction(duration);
+                var fpsCameraTask = controller.OnDeadAction(animLength);
                 await UniTask.WhenAll(moveTask,fpsCameraTask);
             }
             catch (OperationCanceledException) { }

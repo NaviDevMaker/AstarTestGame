@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: ce11530945330ff43a0de7b6c270dd2f
   m_SerializeEntries:
+  - m_GUID: 0e183c641d5955f4bb74af4d36848d14
+    m_Address: Prefabs/Effects/HitEffect
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0e2bcca17b4974f428193a8df05cee45
     m_Address: Datas/Enemy/EnemyActionFieldData
     m_ReadOnly: 0

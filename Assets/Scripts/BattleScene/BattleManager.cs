@@ -3,6 +3,8 @@ using Game.Player;
 using Game.Stage;
 using Game.Spawner;
 using Cysharp.Threading.Tasks;
+using Game.Icon;
+using Game.Text;
 public class BattleManager : MonoBehaviour
 {
     [SerializeField] PosaitionSetUper positionSetuper;
@@ -11,12 +13,13 @@ public class BattleManager : MonoBehaviour
     [SerializeField] ItemSpawner itemSpawner;
     [SerializeField] EnemySpawner enemySpawner;
     [SerializeField] ScoreManager scoreManager;
+    [SerializeField] BattleIconManager battleIconManager;
+    [SerializeField] GhostAliveCounter ghostAliveCounter;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Initialize();
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -35,5 +38,7 @@ public class BattleManager : MonoBehaviour
         itemSpawner.Initialize();
         enemySpawner.Initialize();
         scoreManager.Initialize();
+        battleIconManager.Initialize(player);
+        ghostAliveCounter.Initialize();
     }
 }
