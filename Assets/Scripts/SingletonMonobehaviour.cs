@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SigletonMonobehaiver<TMono> : MonoBehaviour where TMono : MonoBehaviour
+public class SingletonMonobehaviour<TMono> : MonoBehaviour where TMono : MonoBehaviour
 {
     public  static TMono Instance { get; private set;}
 

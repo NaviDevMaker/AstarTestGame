@@ -4,7 +4,7 @@ using Game.Enemy;
 using Game.Player;
 using DG.Tweening;
 
-namespace Game.Text
+namespace Game.TextRenewer
 {
     public class ScoreManager : MonoBehaviour
     {

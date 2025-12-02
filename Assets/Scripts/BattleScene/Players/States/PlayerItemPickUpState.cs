@@ -76,7 +76,7 @@ namespace Game.Player
             var dot = Vector3.Dot(forward, toTarget);//中心線（この場合はfowardの方向の線）からtoTargetまでの内積の値
             var thereHold = Mathf.Cos(pickUpAngle * 0.5f * Mathf.Deg2Rad);//ここで0.5倍しないとpickupAngle由来のCosの値(全体の角度をもとにした値)とdot(中心線からの内積)を比べることになり不整合が起きる
             Debug.Log($"dot:{dot},thereHold:{thereHold}");
-            return dot >= thereHold;//threreHoldはpickUpAngleの値が上がれば上がるだけ値が上がり、dotは方向が同じだったら同じだけ値が大きくなるため、dot >= thereHoldとなる
+            return dot >= thereHold;//threreHoldはpickUpAngleの値が上がれば上がるだけ値が下がり、dotは方向が同じだったら同じだけ値が大きくなるため、dot >= thereHoldとなる
         }
         public void SetHashToFalse() => controller.animator.SetBool(animatorHash, false);
 

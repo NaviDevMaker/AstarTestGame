@@ -18,7 +18,8 @@ namespace Game.Item
     public abstract class ItemBase<TItem>: MonoBehaviour, IPickupedItem,ISpawnableObj where TItem : ItemBase<TItem>
     {
         protected ItemMover<TItem> itemMover;
-
+        [SerializeField] ItemAudioDatas itemAudioDatas;
+        protected ItemAudioDatas _itemAudioDatas => itemAudioDatas;
         public bool isPicked { get; protected set; } = false;
         public Vector2Int myMapNode { get; set; }
         public UnityAction<Vector2Int> AfterPickUpedItem { get; set; }
@@ -26,6 +27,8 @@ namespace Game.Item
         public GameObject ownerObj => gameObject;
 
         public void DestroyItem() => Destroy(this.gameObject);
+
+        protected ItemAudioHelper<TItem> itemAudioHelper;
         public abstract UniTask OnPickUpItem(PlayerController player);
         // Start is called once before the first execution of Update after the MonoBehaviour is created
 

@@ -24,7 +24,7 @@ namespace Game.Player
         static TPlayer instance { get;}//interface‚àstatic‚¢‚¯‚é‚ç‚µ‚¢
         PlayerAudioHelper audioHelper { get;}
      }
-    public class PlayerController : MonoBehaviour,IAssetSetter,IPlayer<PlayerController>,IDamageable
+    public class PlayerController : MonoBehaviour,IAssetSetter,IPlayer<PlayerController>,IDamageable,ISetUper
     {
         public AnimationData animationData { get; private set; }
         public PlayerIdleState _playerIdleState { get; private set;}
@@ -57,6 +57,7 @@ namespace Game.Player
 
         public static PlayerController instance { get; private set; }
         public Func<float, UniTask> OnAttackingAction { get; set; }
+        public bool IsSetUped { get; set; } = false;
 
         [Serializable]
         class AudioSources
@@ -78,6 +79,7 @@ namespace Game.Player
         // Update is called once per frame
         void Update()
         {
+            if (!IsSetUped) return;
             Debug.Log(currentTarget);
             if (isDead && currentState != _playerDeathState)
             {
@@ -170,7 +172,7 @@ namespace Game.Player
         {
             if (isDead) return;
             currentLife -= damage;
-            LifeManager.Instance.ReduceLife();
+            LifeManager.Instance.ReduceLife(damage).Forget();
             if(currentLife <= 0) isDead = true;
         }
         public void SetHashToFalse() => _playerItemPickUpState.SetHashToFalse();

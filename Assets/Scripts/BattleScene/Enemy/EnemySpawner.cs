@@ -7,13 +7,15 @@ using NUnit.Framework.Internal;
 using UnityEngine.Events;
 namespace Game.Spawner
 {
-    public class EnemySpawner : MonoBehaviour,ISpawner
+    public class EnemySpawner : MonoBehaviour,ISpawner,ISetUper
     {
         [SerializeField] int spawnableCount;
         SpawnHelper<EnemyGenerateSetting> spawnHelper;
         public SpawnerType spawnerType => SpawnerType.Enemy;
         List<IEnemy> currentEnemys = new List<IEnemy>();
         public UnityAction<bool> OnChangeCount { get; set; }
+        public bool IsSetUped { get; set; } = false;
+
         public ISpawnableObj GetTargetObj()
         {
             var prefabSetting = spawnHelper.prefabGenerateSetting;
@@ -47,7 +49,9 @@ namespace Game.Spawner
         // Update is called once per frame
         void Update()
         {
-            if (spawnHelper.IsReachedSpawnTime() && currentEnemys.Count < spawnableCount)
+            if (spawnHelper == null) return;
+            if (spawnHelper.IsReachedSpawnTime() && currentEnemys.Count < spawnableCount
+                && IsSetUped)
             {
                 if (spawnHelper.IsSpawnable(out var node)) Spawn(node.x, node.y);
             }

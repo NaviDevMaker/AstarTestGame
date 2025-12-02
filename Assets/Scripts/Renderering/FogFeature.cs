@@ -36,7 +36,7 @@ public class FogFeature : ScriptableRendererFeature
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             var cmd = CommandBufferPool.Get("FogPass");
-
+            Debug.Log("FogPass Execute");  // ★追加：1フレーム毎にログが出れば実行されてる
             // ↓ URP公式推奨のBlitter
             Blitter.BlitCameraTexture(cmd, source, destination, material, 0);
             Blitter.BlitCameraTexture(cmd, destination, source);
@@ -61,6 +61,7 @@ public class FogFeature : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        renderer.EnqueuePass(pass);
+        var camera = renderingData.cameraData.camera;
+        if(camera.TryGetComponent<FogCameraMaker>(out var _)) renderer.EnqueuePass(pass);
     }
 }

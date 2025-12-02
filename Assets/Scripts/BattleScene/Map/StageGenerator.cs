@@ -64,7 +64,6 @@ namespace Game.Stage
             rw,// 実際の部屋の幅
             rh, // 実際の部屋の高さ
         }
-
         //割る方向
         enum SplitType
         {
@@ -72,7 +71,6 @@ namespace Game.Stage
             verticle = 0,
             horizontal = 1,
         }
-
         public GameObject[] mapObjects { get; private set;}               // マップ生成用のオブジェクト配列
         private GameObject[] objectParents;             // 各タイプ別の親オブジェクト配列
 
@@ -159,7 +157,6 @@ namespace Game.Stage
             // 部屋（StartX、StartY、幅、高さ）
             roomStatus = new int[System.Enum.GetNames(typeof(RoomStatus)).Length, roomNum];
             bool[] roomLocked = Enumerable.Repeat<bool>(false, roomNum).ToArray();
-
 
             // フロアを入れる
             //roomCountは最初は０(まだ何も生成されてないから)で初期化、ここで部屋一つ目の生成

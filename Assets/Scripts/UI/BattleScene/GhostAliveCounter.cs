@@ -1,19 +1,20 @@
 using Game.Spawner;
 using UnityEngine;
 using UnityEngine.UI;
-namespace Game.Text
+namespace Game.TextRenewer
 {
     //マジで依存関係聞かないでも理論だててかんがえられるようになってね、とりあえずUI
     //というただUIの更新をするところがゲームのシステムから参照されるのはよくないからね
     //出来ればロジック側はなにもUI側を知らないってのを意識して
     public class GhostAliveCounter : MonoBehaviour
     {
-        [SerializeField] UnityEngine.UI.Text ghostCountText;
+        Text ghostCountText;
         [SerializeField] EnemySpawner enemySpawner;
         int currentEnemyCount = 0;
         const string content = "Ghosts Alive:";
         public void Initialize()
         {
+            ghostCountText = GetComponent<Text>();
             ghostCountText.text = $"{content}{currentEnemyCount.ToString("D3")}";
             enemySpawner.OnChangeCount += UpdateText;
         }

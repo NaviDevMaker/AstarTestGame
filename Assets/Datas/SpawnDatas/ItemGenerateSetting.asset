@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnTime: 0.01
   prefabs:
-  - {fileID: 4162418330612695690, guid: 1b55db4efca996f44a7f99a2ec779bbc, type: 3}
+  - {fileID: 7661546903368143711, guid: 4e55ebb4a0d933842abef24514e3b469, type: 3}
+  - {fileID: 5778742611610709030, guid: cfec2572753f82a42bdf3c94a01fc204, type: 3}

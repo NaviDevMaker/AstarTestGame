@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 using UnityEngine;
 
-public class HitStopManager : SigletonMonobehaiver<HitStopManager>
+public class HitStopManager : SingletonMonobehaviour<HitStopManager>
 {
     CancellationToken destroyedToken;
     CancellationTokenSource hitStopCts;

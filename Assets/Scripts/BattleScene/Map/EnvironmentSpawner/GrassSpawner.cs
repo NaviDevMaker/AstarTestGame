@@ -33,6 +33,7 @@ namespace Game.Stage
                 
                }
 
+            Debug.Log($"DetailLaterのlength,{detailLayer.GetLength(0)}");
                data.SetDetailLayer(xBase, yBase, 0, detailLayer);
             Debug.Log("草の本数：" + CountGrass(detailLayer, detailResolution));
 
@@ -53,6 +54,7 @@ namespace Game.Stage
             //本当によくない、忘れてた感覚、掛け算の本質はその掛ける数側の基準に掛けられる数を合わせるためね
             //だから草マップ基準に替えたいからdetailResolutionをかける
             //ちなみに草マップは正方形ね
+            //切り上げね
             var detailX = Mathf.FloorToInt(((float)worldX / size.x) * detailResolution);
             var detailY = Mathf.FloorToInt(((float)worldY / size.y) * detailResolution);
 

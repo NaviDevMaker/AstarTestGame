@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Game.Effect.Heal;
 using Game.Effect.Hit;
 using Game.Effect.Smoke;
 using UnityEngine;
@@ -14,11 +15,12 @@ namespace Game.Effect
         ParticleSystem effect { get; }
     }
 
-    public class EffectManager : SigletonMonobehaiver<EffectManager>
+    public class EffectManager : SingletonMonobehaviour<EffectManager>
     {
        public  SmokeEffect smokeEffect { get; private set;}
        public HitEffect hitEffect { get; private set; }
 
+       public HealEffect healEffect { get; private set; }
         private void Start()
         {
             Initialize();
@@ -27,8 +29,8 @@ namespace Game.Effect
         {
             smokeEffect = new SmokeEffect();
             hitEffect = new HitEffect();
+            healEffect = new HealEffect();  
         }     
     }
-
 }
 

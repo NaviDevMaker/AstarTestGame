@@ -6,18 +6,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using DG.Tweening;
+using UnityEngine.Events;
 namespace Game.Player
 {
-    public class LifeManager : MonoBehaviour,IAssetSetter
+    public class LifeManager : MonoBehaviour, IAssetSetter
     {
         public static LifeManager Instance { get; private set; } = null;
         [SerializeField] PlayerController player;
         [SerializeField] Sprite noLifeSprite;
         [SerializeField] Sprite lifeSprite;
+
         Image lifeImagePrefab;
         Dictionary<Image, bool> lifeDic = new Dictionary<Image, bool>();
         Dictionary<Image, CancellationTokenSource> ctsDic = new Dictionary<Image, CancellationTokenSource>();
         Dictionary<Image, Vector3> scaleDic = new Dictionary<Image, Vector3>();
+        //float duration = 0.1f;
         public async UniTask GetAsset()
         {
             var imageObj = await GetAssetsMethods.GetAsset<GameObject>("Prefabs/LifeImage");
@@ -31,15 +34,15 @@ namespace Game.Player
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         async void Start()
         {
-            await  GetAsset();
+            await GetAsset();
             SetLifeImages();
         }
         // Update is called once per frame
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space)) ReduceLife();
-            else if (Input.GetKeyDown(KeyCode.X)) RestoreLife();
-        }
+        //void Update()
+        //{
+        //    if (Input.GetKeyDown(KeyCode.Space)) ReduceLife();
+        //    else if (Input.GetKeyDown(KeyCode.X)) RestoreLife();
+        //}
         void SetLifeImages()
         {
             var lifeCount = player.playerStatusData.Life;
@@ -65,7 +68,7 @@ namespace Game.Player
             if (index == -1) return;
             var keys = lifeDic.Keys.ToList();
             var targetImage = keys[index];
-            
+
             lifeDic[targetImage] = isReducing ? false : true;
             var currentCts = ctsDic[targetImage];
             currentCts?.Cancel();
@@ -74,18 +77,18 @@ namespace Game.Player
             var currentTargetScale = default(Vector3);
             try
             {
-                var scaleupTask = GetScaleTask(targetImage, true, newCts,out currentTargetScale);
+                var scaleupTask = GetScaleTask(targetImage, true, newCts, out currentTargetScale);
                 await scaleupTask;
                 var scaleDownTask = GetScaleTask(targetImage, false, newCts, out currentTargetScale);
                 await scaleDownTask;
             }
-            catch(OperationCanceledException){}
-            finally { targetImage.transform.localScale = currentTargetScale;}
+            catch (OperationCanceledException) { }
+            finally { targetImage.transform.localScale = currentTargetScale; }
             var targetSprite = isReducing ? noLifeSprite : lifeSprite;
             SetSprite(targetImage, targetSprite);
         }
-        UniTask GetScaleTask(Image targetImage,bool isUp,CancellationTokenSource cts,out Vector3 targetScale)
-        {   
+        UniTask GetScaleTask(Image targetImage, bool isUp, CancellationTokenSource cts, out Vector3 targetScale)
+        {
             var duration = 0.1f;
             var originalScale = scaleDic[targetImage];
             targetScale = isUp
@@ -96,10 +99,20 @@ namespace Game.Player
                               })()
                               : originalScale;
             var scaleSet = new Vector3TweenSetup(targetScale, duration);
-            return targetImage.gameObject.Scaler(scaleSet).ToUniTask(cancellationToken:cts.Token);
+            return targetImage.gameObject.Scaler(scaleSet).ToUniTask(cancellationToken: cts.Token);
         }
-        public void ReduceLife() => ChangeLife(true).Forget();
-        public void RestoreLife() => ChangeLife(false).Forget();
+        public async UniTask ReduceLife(int amount)
+        {
+            for (int i = 0; i < amount; i++) await ChangeLife(true);
+        }
+        public async UniTask RestoreLife(int amount,UnityAction effectAction)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                effectAction();
+                await ChangeLife(false);
+            }
+        }
     }
 }
 

@@ -5,15 +5,19 @@ using Game.Item;
 using Game.SpawnableObj;
 namespace Game.Spawner
 {
-    public class ItemSpawner : MonoBehaviour,ISpawner
+    public class ItemSpawner : MonoBehaviour,ISpawner,ISetUper
     {
         SpawnHelper<ItemGenerateSetting> spawnHelper;
         public SpawnerType spawnerType => SpawnerType.Item;
+
+        public bool IsSetUped { get; set; } = false;
+
         // Update is called once per frame
         void Update()
         {
+            if (spawnHelper == null) return;
             //if (itemGenerateSetting == null) return;// || !isInitialized()
-            if (spawnHelper.IsReachedSpawnTime())
+            if (spawnHelper.IsReachedSpawnTime() && IsSetUped)
             {
                 if (spawnHelper.IsSpawnable(out var node)) Spawn(node.x, node.y);
             }
@@ -44,7 +48,7 @@ namespace Game.Spawner
         {
             var prefabSetting = spawnHelper.prefabGenerateSetting;
             var itemLength = prefabSetting.Prefabs.Count;
-            prefabSetting.Prefabs.ForEach(p => Debug.Log($"プレふぁぶの名前 : {p}"));
+            //prefabSetting.Prefabs.ForEach(p => Debug.Log($"プレふぁぶの名前 : {p}"));
             var r = UnityEngine.Random.Range(0, itemLength);
             return prefabSetting.Prefabs[r];
         }
