@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4351013909727535923}
   - component: {fileID: 4947286271212673208}
   - component: {fileID: 7952866804425636539}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Shingles (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,13 +97,13 @@ GameObject:
   - component: {fileID: 9005557714364036866}
   - component: {fileID: 103345882001919949}
   - component: {fileID: 1492655127645373981}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Shingles (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &9005557714364036866
 Transform:
   m_ObjectHideFlags: 0
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 7213438531734335289}
   - component: {fileID: 4577566478680423072}
   - component: {fileID: 2819108127936811546}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Shingles (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 4281352589677948297}
   - component: {fileID: 2388451477088314937}
   - component: {fileID: 6323778690709431266}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Shingles (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,13 +355,13 @@ GameObject:
   - component: {fileID: 4180562807329643939}
   - component: {fileID: 4141012983145451640}
   - component: {fileID: 2777438438571072060}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Shingles (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4180562807329643939
 Transform:
   m_ObjectHideFlags: 0
@@ -441,13 +441,13 @@ GameObject:
   - component: {fileID: 5456196595300997196}
   - component: {fileID: 3477878464826238817}
   - component: {fileID: 733037389659370094}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Shingles (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5456196595300997196
 Transform:
   m_ObjectHideFlags: 0
@@ -527,13 +527,13 @@ GameObject:
   - component: {fileID: 5363280368515603167}
   - component: {fileID: 1944241767094334374}
   - component: {fileID: 3958619567685703589}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Shingles (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5363280368515603167
 Transform:
   m_ObjectHideFlags: 0
@@ -613,13 +613,13 @@ GameObject:
   - component: {fileID: 3984147419476326178}
   - component: {fileID: 6195827162703738842}
   - component: {fileID: 2396612366208244946}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Shingles (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3984147419476326178
 Transform:
   m_ObjectHideFlags: 0
@@ -699,7 +699,7 @@ GameObject:
   - component: {fileID: 5642798030479908977}
   - component: {fileID: 4998041542922247767}
   - component: {fileID: 5010640069716126384}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Shingles (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -785,7 +785,7 @@ GameObject:
   - component: {fileID: 5969495961149709553}
   - component: {fileID: 594471521149280577}
   - component: {fileID: 742413535410885121}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Shingles (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -871,13 +871,13 @@ GameObject:
   - component: {fileID: 2963023981083297290}
   - component: {fileID: 412904289897496114}
   - component: {fileID: 5361007842594398250}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Shingles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2963023981083297290
 Transform:
   m_ObjectHideFlags: 0
@@ -957,7 +957,7 @@ GameObject:
   - component: {fileID: 7074018730264608531}
   - component: {fileID: 1033133574136778279}
   - component: {fileID: 3914145194884918959}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Shingles (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

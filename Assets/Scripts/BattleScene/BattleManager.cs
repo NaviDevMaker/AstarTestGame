@@ -21,6 +21,9 @@ public class BattleManager : MonoBehaviour
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] BattleIconManager battleIconManager;
     [SerializeField] GhostAliveCounter ghostAliveCounter;
+    [SerializeField] BattleButtonManager battleButtonManager;
+    [SerializeField] BattleStateManager battleStateManager;
+    [SerializeField] ResultManager resultManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -36,7 +39,10 @@ public class BattleManager : MonoBehaviour
         var player = GameObject.FindFirstObjectByType<PlayerController>();
         if (player == null) throw new System.Exception();
         var playerTra = player.transform;
-        
+
+        resultManager.Initialize(player);
+        battleButtonManager.Initialize();
+        battleStateManager.Initialize(player);
         stageGenerator.Initialize();
         positionSetuper.Initialize(playerTra);
         cameraMover.Initialize(playerTra);

@@ -5,7 +5,7 @@ using UnityEngine;
 public class TitleManager : MonoBehaviour
 {
     [SerializeField] TitleUIManager titleUIManager;
-    [SerializeField] ButtonManager buttonManager;
+    [SerializeField] TitleButtonManager buttonManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine.Events;
 using Game.SpawnableObj;
+using System;
 namespace Game.Item
 {
     public interface IPickupedItem
@@ -37,7 +38,11 @@ namespace Game.Item
         protected virtual async void Start()
         {
             Initialize();
-            await UniTask.WaitUntil(() => itemMover != null,cancellationToken:this.GetCancellationTokenOnDestroy());
+            try
+            {
+                await UniTask.WaitUntil(() => itemMover != null, cancellationToken: this.GetCancellationTokenOnDestroy());
+            }
+            catch (OperationCanceledException) { return; }
             itemMover.StartInfinityAction().Forget();
         }        
         // Update is called once per frame

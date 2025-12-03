@@ -17,6 +17,14 @@ namespace Game.Item
         TItem owner;
         static ItemMoveSetting itemMoveSetting = null;
         CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationToken myTokenCts
+        { 
+            get
+            {
+                if (owner == null) return default;
+               return owner.GetCancellationTokenOnDestroy();
+            }
+        }
         async UniTask Initialize(TItem owner)
         {
             this.owner = owner;
@@ -52,6 +60,7 @@ namespace Game.Item
                     while ((targetPos - owner.transform.position).magnitude > 0.1f)
                     {
                         token.ThrowIfCancellationRequested();
+                        myTokenCts.ThrowIfCancellationRequested();
                         var move = Vector3.MoveTowards(owner.transform.position, targetPos, Time.deltaTime * itemMoveSetting.MoveSpeed);
                         owner.transform.position = move;
                         await UniTask.Yield(cancellationToken:token);
@@ -110,16 +119,18 @@ namespace Game.Item
             var startY = owner.transform.position.y + absOffset;
             try
             {
-                while (true)
+                while (owner != null)
                 {
                     cts.Token.ThrowIfCancellationRequested();
+                    if(myTokenCts != default) myTokenCts.ThrowIfCancellationRequested();
                     t += Time.deltaTime * floatSpeed;
                     var targetY = startY + Mathf.Sin(t) * absOffset;//Sin単位円的な大きさだから絶対値で最大値が必要
                     owner.transform.position = new Vector3(owner.transform.position.x, targetY, owner.transform.position.z);
-                    await UniTask.WaitForEndOfFrame(cancellationToken: cts.Token); 
+                    await UniTask.WaitForEndOfFrame(); 
                 }
             }
-            catch (OperationCanceledException) { }        
+            catch (OperationCanceledException) { }
+            catch (ObjectDisposedException) { }
         }
     }
 }

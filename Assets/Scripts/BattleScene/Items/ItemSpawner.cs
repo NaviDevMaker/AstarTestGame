@@ -15,7 +15,7 @@ namespace Game.Spawner
         // Update is called once per frame
         void Update()
         {
-            if (spawnHelper == null) return;
+            if (spawnHelper == null || BattleStateManager.Instance.isEndBattle) return;
             //if (itemGenerateSetting == null) return;// || !isInitialized()
             if (spawnHelper.IsReachedSpawnTime() && IsSetUped)
             {

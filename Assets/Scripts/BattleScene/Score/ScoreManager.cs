@@ -11,7 +11,7 @@ namespace Game.TextRenewer
         [SerializeField] TweenAmountSetting tweenAmountSetting;
         [SerializeField] UnityEngine.UI.Text scoreText;
         [SerializeField] PlayerController player;
-        int currentScore = 0;
+        public int currentScore { get; private set;} = 0;
         Vector3 originalScale;
         Sequence currentScaleTween = null;
 

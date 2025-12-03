@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : SingletonMonobehaviour<GameManager>
 {
+
+    public SaveDataController SaveController { get; private set;} = new SaveDataController();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

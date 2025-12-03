@@ -49,7 +49,7 @@ namespace Game.Spawner
         // Update is called once per frame
         void Update()
         {
-            if (spawnHelper == null) return;
+            if (spawnHelper == null || BattleStateManager.Instance.isEndBattle) return;
             if (spawnHelper.IsReachedSpawnTime() && currentEnemys.Count < spawnableCount
                 && IsSetUped)
             {

@@ -109,15 +109,17 @@ namespace Game.Enemy
         }
         public async UniTask ChaseLooper(CancellationTokenSource chaseEndCts)
         {
-            
-            //var isChangingPathes = false;
+
+            var doubleCts = CancellationTokenSource.CreateLinkedTokenSource
+                  (chaseEndCts.Token
+                   , targetPlayer.GetCancellationTokenOnDestroy());
             try
             {
                 await UniTask.WaitUntil(() => actionFieldDatas != null
                                         , cancellationToken: token);
                 CancellationTokenSource moveCts = null;
                 var distBasedSqr = actionFieldDatas.DistBasedSqr;
-                while (!chaseEndCts.IsCancellationRequested)
+                while (!doubleCts.IsCancellationRequested)
                 {
                     // Åö ëOÇÃà⁄ìÆÇÉLÉÉÉìÉZÉã
                     moveCts?.Cancel();
@@ -151,7 +153,7 @@ namespace Game.Enemy
                             //if(isContinuable) isChangingPathes = true;
                             //return isChangingPathes;
                         },
-                        cancellationToken: chaseEndCts.Token
+                        cancellationToken: doubleCts.Token
                     );
                 }
             }
