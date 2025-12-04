@@ -9,13 +9,12 @@ namespace Game.Spawner
 {
     public class EnemySpawner : MonoBehaviour,ISpawner,ISetUper
     {
-        [SerializeField] int spawnableCount;
-        SpawnHelper<EnemyGenerateSetting> spawnHelper;
+       // [SerializeField] int spawnableCount;
+        EnemySpawnHelper spawnHelper;
         public SpawnerType spawnerType => SpawnerType.Enemy;
         List<IEnemy> currentEnemys = new List<IEnemy>();
         public UnityAction<bool> OnChangeCount { get; set; }
         public bool IsSetUped { get; set; } = false;
-
         public ISpawnableObj GetTargetObj()
         {
             var prefabSetting = spawnHelper.prefabGenerateSetting;
@@ -23,9 +22,7 @@ namespace Game.Spawner
             var r = UnityEngine.Random.Range(0, enemyLength);
             return prefabSetting.EnemyPrefabs[r];
         }
-
-        public void Initialize() => spawnHelper = new SpawnHelper<EnemyGenerateSetting>(spawnerType);
-
+        public void Initialize() => spawnHelper = new EnemySpawnHelper(spawnerType);
         public void Spawn(int targetX, int targetY)
         {
             var mapPositionInfo = new MapPositionInfo(targetX, targetY);
@@ -50,8 +47,8 @@ namespace Game.Spawner
         void Update()
         {
             if (spawnHelper == null || BattleStateManager.Instance.isEndBattle) return;
-            if (spawnHelper.IsReachedSpawnTime() && currentEnemys.Count < spawnableCount
-                && IsSetUped)
+            spawnHelper.ChangeSpawnTime();
+            if (spawnHelper.IsSpawnableTimeAndCount(currentEnemys) && IsSetUped)
             {
                 if (spawnHelper.IsSpawnable(out var node)) Spawn(node.x, node.y);
             }

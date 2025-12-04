@@ -15,4 +15,4 @@ MonoBehaviour:
   moveSpeed: 3
   damageAmount: 1
   score: 10
-  visibleDistBasedSqr: 25
+  visibleDistBasedSqr: 50

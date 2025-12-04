@@ -30,13 +30,13 @@ namespace Game.Spawner
     public class SpawnHelper<TPrefabData> : IAssetSetter where TPrefabData : SpawnDataBase
     {
         public int[,] occupyMap { get; private set; }
-        float spawnTime = 0f;
-        float elapsedTime = 0f;
+        protected float spawnTime = 0f;
+        protected float elapsedTime = 0f;
         string address;
         public TPrefabData prefabGenerateSetting { get; private set;}
         SpawnerType spawnerType;
         public SpawnHelper(SpawnerType spawnerType) => Initialize(spawnerType).Forget();
-        async UniTask Initialize(SpawnerType spawnerType)
+        protected virtual async UniTask Initialize(SpawnerType spawnerType)
         {
             this.spawnerType = spawnerType;
             var map = StageGenerator.Instance.map;
@@ -54,6 +54,7 @@ namespace Game.Spawner
             elapsedTime += Time.deltaTime;
             return elapsedTime >= spawnTime;
         }
+
         public bool IsSpawnable(out Vector2Int node)
         {
             node = Vector2Int.zero;

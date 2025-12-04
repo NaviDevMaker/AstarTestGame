@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbc7d179c91510449935955f7b2a09ed, type: 3}
   m_Name: ItemGenerateSetting
   m_EditorClassIdentifier: 
-  spawnTime: 0.01
+  spawnTime: 10
+  spawnableCount: 0
   prefabs:
   - {fileID: 7661546903368143711, guid: 4e55ebb4a0d933842abef24514e3b469, type: 3}
   - {fileID: 5778742611610709030, guid: cfec2572753f82a42bdf3c94a01fc204, type: 3}

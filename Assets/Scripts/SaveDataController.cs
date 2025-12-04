@@ -9,7 +9,6 @@ public class SaveDataController
     const string fileName = "saveData.json";
     string filePath => Path.Combine(Application.persistentDataPath, fileName);
 
-    //ämíËÇ≈ç≈Ç‡çÇÇ¢ílÇ™à¯êîÇ≈óàÇÈÇ©ÇÁÇ†Ç∆Ç≈íºÇµÇΩÇ©Ç¡ÇΩÇÁíºÇµÇƒ
     public void SaveData(int currentScore)
     {
         var saveData = new SaveData();
@@ -19,15 +18,28 @@ public class SaveDataController
             var previousJson = File.ReadAllText(filePath);
             var previousData = JsonUtility.FromJson<SaveData>(previousJson);
             var previousHighScore = previousData.highScore;
-            highScore = Mathf.Max(currentScore, previousHighScore);
-            if (highScore != previousHighScore) saveData.highestDateTime = DateTime.Now.ToString("O");
+            if (currentScore > previousHighScore)
+            {
+                highScore = currentScore;
+                saveData.highestDateTime = DateTime.Now.ToString("O");
+            }
+            else
+            {
+                highScore = previousHighScore;
+                saveData.highestDateTime = previousData.highestDateTime != null
+                                           ? previousData.highestDateTime
+                                           : DateTime.Now.ToString("O");
+            }
         }
-        else highScore = currentScore;
+        else
+        {
+            highScore = currentScore;
+            saveData.highestDateTime = DateTime.Now.ToString("O");
+        }
         saveData.highScore = highScore;
         var json = JsonUtility.ToJson(saveData);
         File.WriteAllText(filePath, json);
     }
-
     public (int highScore,DateTime highestDateTime) LoadData()
     {
         if (!File.Exists(filePath)) return (-1,default);

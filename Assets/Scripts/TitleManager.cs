@@ -6,6 +6,7 @@ public class TitleManager : MonoBehaviour
 {
     [SerializeField] TitleUIManager titleUIManager;
     [SerializeField] TitleButtonManager buttonManager;
+    [SerializeField] AudioManager audioManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -13,6 +14,7 @@ public class TitleManager : MonoBehaviour
     }
     async UniTask Initialize()
     {
+        audioManager.Initialize();
        await titleUIManager.Initialize();
        await buttonManager.Initialize();
     }

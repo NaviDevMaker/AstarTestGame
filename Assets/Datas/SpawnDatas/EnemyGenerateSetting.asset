@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a93da8074ef87448528091c30ab07c, type: 3}
   m_Name: EnemyGenerateSetting
   m_EditorClassIdentifier: 
-  spawnTime: 5
+  spawnTime: 8
   enemyPrefabs:
   - {fileID: 7741047024727147938, guid: 5268ef1fbea74324190785cfa5f1c0d4, type: 3}
   - {fileID: 6194855528693551998, guid: 21a82cfa38f0abf49b53a92d2b5fd0f3, type: 3}
   - {fileID: 4839519987080875068, guid: ef86d0b998ede6746ae2d7bcf08d7e4e, type: 3}
+  spawnableCount: 100
+  toTwoRoundTime: 1
+  toThreeRoundTime: 1
+  toFourRoundTime: 1
+  toFiveRoundTime: 2

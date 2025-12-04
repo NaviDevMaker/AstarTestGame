@@ -18,6 +18,6 @@ MonoBehaviour:
   pickUpAngle: 90
   pickUpRadius: 2
   rotateSpeed: 15
-  detectRange: 2.5
+  detectRange: 1.5
   attackEndFrame: 15
   invincibleDuration: 2

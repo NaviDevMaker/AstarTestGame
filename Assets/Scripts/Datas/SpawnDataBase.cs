@@ -6,9 +6,8 @@ namespace Game.Spawner
     public interface ISpawnPrefab { }
     public class SpawnDataBase : ScriptableObject,ISpawnPrefab
     {
-        [SerializeField] float spawnTime;
+        [SerializeField] float spawnTime; 
         public float SpawnTime  => spawnTime;
     }
-
 }
 

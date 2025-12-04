@@ -27,7 +27,7 @@ namespace Game.Effect.Smoke
         public async UniTask AutoDestroy(ParticleSystem particle)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(destroyTime));
-            UnityEngine.Object.Destroy(particle.gameObject);
+            if(particle != null) UnityEngine.Object.Destroy(particle.gameObject);
         }
     }
 

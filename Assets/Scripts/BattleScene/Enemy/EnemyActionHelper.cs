@@ -34,6 +34,7 @@ namespace Game.Enemy
         CancellationToken token;
         AStarPathFinder aStarPathFinder;
         float moveSpeed = 0f;
+        const float rotateSpeed = 20f;
         float visibleDistBasedSqr = 0f;
         public async UniTask StartTranslusentAction()
         {
@@ -179,7 +180,17 @@ namespace Game.Enemy
                         if ((path - owner.transform.position).sqrMagnitude <= 0.1f) break;
                         var move = Vector3.MoveTowards(owner.transform.position, path, moveSpeed * Time.deltaTime);
                         var dir = (move - owner.transform.position).normalized;
-                        if(dir != Vector3.zero) owner.transform.rotation = Quaternion.LookRotation(dir);
+                        if (dir != Vector3.zero)
+                        {
+                            var currentRot = owner.transform.rotation;
+                            var targetRot = Quaternion.LookRotation(dir);
+                            owner.transform.rotation = Quaternion.Slerp
+                                         (
+                                             currentRot,
+                                             targetRot,
+                                             rotateSpeed * Time.deltaTime
+                                         );
+                        }
                         owner.transform.position = move;
                         await UniTask.Yield();
                     }

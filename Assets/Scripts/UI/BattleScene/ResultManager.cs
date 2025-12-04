@@ -24,9 +24,9 @@ public class ResultManager : MonoBehaviour
         var amount = 2.0f;
         await UIActionHelper.UIScaleAction(duration,amount,resultText);
         var gameManager = GameManager.Instance;
-        var currentHighScore = gameManager.SaveController.LoadData().highScore;
-        if (currentHighScore >= result) return;
+        var previousHighScore = gameManager.SaveController.LoadData().highScore;
         gameManager.SaveController.SaveData(result);
+        if (previousHighScore >= result) return;
         await UIActionHelper.UIScaleAction(duration,amount,newRecordText);
         StartLoopAction().Forget();
     }

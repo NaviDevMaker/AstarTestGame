@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd8eeac28cdacfc40b3ce30c725e9d30, type: 3}
+  m_Name: OtherAudioDatas
+  m_EditorClassIdentifier: 
+  mainAudio: {fileID: 8300000, guid: b89be13f76d838a42a2674833a3953a7, type: 3}
+  countDownClip: {fileID: 8300000, guid: 64f645363eb3a5440bc670e342f21416, type: 3}
+  recordAppearClip: {fileID: 8300000, guid: daa95b443f6373c4e812b3541d35fafc, type: 3}
+  battleClip: {fileID: 8300000, guid: f0d3bbf91dc9da24e992f6705da4bbaa, type: 3}

@@ -1,7 +1,9 @@
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 public static class UIActionHelper
 {
     public static async UniTask UIScaleAction(float duration, float amount,params Graphic[] graphics)
@@ -12,6 +14,15 @@ public static class UIActionHelper
             var buttonTask = GetScaleTask(graphic,duration,amount);
             await buttonTask();
         }
+    }
+    public static UniTask[] GetUIFadeTask(float targetAlpha, params Graphic[] targetTexts)
+    {
+        var fadeDuration = 2.0f;
+        return targetTexts.Select(text =>
+        {
+            var fadeSet = new FadeSet(targetAlpha, fadeDuration);
+            return text.Fader(fadeSet).ToUniTask(cancellationToken: text.GetCancellationTokenOnDestroy());
+        }).ToArray();
     }
     public static Func<UniTask> GetScaleTask(Graphic targetGraphic,float duration,float amount)
     {

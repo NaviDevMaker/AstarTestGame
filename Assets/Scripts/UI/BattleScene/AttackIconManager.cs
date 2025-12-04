@@ -5,16 +5,21 @@ using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System.Threading;
+using System.Linq;
 namespace Game.Icon
 {
     public class AttackIconManager : MonoBehaviour
     {
         [SerializeField] Image attackIconImage;
+        [SerializeField] Text attackText;
         //PlayerController player;
         //Func<bool> waitAttackingEnd;
-        Color originalColor;
+        Color originalIconColor;
+        Color originalTextColor;
         Color newColor;
-        Vector3 originalScale;
+
+        Vector3 originalImageScale;
+        Vector3 originalTextScale;
         CancellationToken token => this.GetCancellationTokenOnDestroy();
         CancellationTokenSource scaleCts = null;
         public void Initialize(PlayerController player)
@@ -22,16 +27,19 @@ namespace Game.Icon
             //this.player = player;
             //waitAttackingEnd = () => player._playerAttackState.isAttacking;
             player.OnAttackingAction += WaitAttackingEnd;
-            originalColor = attackIconImage.color;
+            originalIconColor = attackIconImage.color;
+            originalTextColor = attackText.color;
             if (!ColorUtility.TryParseHtmlString("#FF0000", out var newColor)) 
                 throw new Exception("The required color isn't exist!!");
             this.newColor = newColor;
-            originalScale = attackIconImage.transform.localScale;
+            originalImageScale = attackIconImage.transform.localScale;
+            originalTextScale = attackText.transform.localScale;
         }
         async UniTask WaitAttackingEnd(float animLength)
         {
             attackIconImage.fillAmount = 0f;
             attackIconImage.color = newColor;
+            attackText.color = newColor;
             var targetAmount = 1.0f;
             var fillTween = DOTween.To(                
                     () => attackIconImage.fillAmount,
@@ -43,32 +51,41 @@ namespace Game.Icon
             try
             {
                 await fillTween.ToUniTask(cancellationToken: token);
-                await GetScaleTask();
+                await UniTask.WhenAll(GetScaleTask(new (Graphic,Vector3)[]{(attackIconImage,originalImageScale),
+                                                                            (attackText,originalTextScale)}));
             }
             catch (OperationCanceledException) { }
-            finally {attackIconImage.color = originalColor;}
+            finally 
+            {
+                attackIconImage.color = originalIconColor;
+                attackText.color = originalTextColor;
+            }
         }
-        async UniTask GetScaleTask()
+        async UniTask GetScaleTask((Graphic graphic, Vector3 originalScale)[] values)
         {
             scaleCts?.Cancel();
             scaleCts?.Dispose();
             scaleCts = new CancellationTokenSource();
 
-            var doubleToken = CancellationTokenSource.CreateLinkedTokenSource(token, scaleCts.Token);
-            var amount = 2.0f;
-            var duration = 0.1f;
-            var ease = Ease.Linear;
-            var scaleSet = new Vector3TweenSetup(originalScale * amount,duration / 2, ease);
-            var scaleToOriginal = new Vector3TweenSetup(originalScale, duration / 2, ease);
-            var seq = DOTween.Sequence();
-            seq.Append(attackIconImage.gameObject.Scaler(scaleSet)
-                     .SetUpdate(UpdateType.Normal, true))
-                .Append(attackIconImage.gameObject.Scaler(scaleToOriginal)
-                     .SetUpdate(UpdateType.Normal, true));
-                
-            await seq.ToUniTask(tweenCancelBehaviour:TweenCancelBehaviour.Complete
-                               ,cancellationToken:doubleToken.Token);
+            await values.Select(value =>
+            {
+                var graphic = value.graphic;
+                var originalScale = value.originalScale;
+                var doubleToken = CancellationTokenSource.CreateLinkedTokenSource(token, scaleCts.Token);
+                var amount = 2.0f;
+                var duration = 0.1f;
+                var ease = Ease.Linear;
+                var scaleSet = new Vector3TweenSetup(originalScale * amount, duration / 2, ease);
+                var scaleToOriginal = new Vector3TweenSetup(originalScale, duration / 2, ease);
+                var seq = DOTween.Sequence();
+                seq.Append(graphic.gameObject.Scaler(scaleSet)
+                         .SetUpdate(UpdateType.Normal, true))
+                    .Append(graphic.gameObject.Scaler(scaleToOriginal)
+                         .SetUpdate(UpdateType.Normal, true));
 
+                return seq.ToUniTask(tweenCancelBehaviour: TweenCancelBehaviour.Complete
+                                   , cancellationToken: doubleToken.Token);
+            }).ToArray();
         }
     }
 }

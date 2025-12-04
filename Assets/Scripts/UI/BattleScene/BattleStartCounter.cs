@@ -24,6 +24,7 @@ namespace Game.TextRenewer
             };
             for (int i = startCount - 1; i >= 0; i--)
             {
+                AudioManager.Instance.PlayCountDownSE(i == 0);
                 await scaleTask();
                 countDownText.text = (--startCount).ToString();
             }

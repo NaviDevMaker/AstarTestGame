@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using System;
 public class SceneTransitonController : SingletonMonobehaviour<SceneTransitonController>
 {
 
@@ -21,8 +22,8 @@ public class SceneTransitonController : SingletonMonobehaviour<SceneTransitonCon
         var nextSceneName = GetNextScene(nextScene);
         Debug.Log($"ŽŸ‚ÌƒV[ƒ“‚Ì–¼‘O,{nextSceneName}");
         await SceneManager.LoadSceneAsync(nextSceneName);
-        await FadeManager.Instance.FadeOut();
         GameManager.Instance.OnSceneLoaded(nextScene);
+        await FadeManager.Instance.FadeOut();
     }
     string GetNextScene(Scenes nextScene)
     {

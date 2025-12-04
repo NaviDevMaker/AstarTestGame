@@ -18,7 +18,10 @@ namespace Game.Item.RestoreItem
             await itemMover.OnStartMove(player);
             Func<UniTask> effectAction = EffectAction(player);
             LifeManager.Instance.RestoreLife(restoreAmount,() => effectAction()).Forget();
-            player.currentLife+= restoreAmount;
+
+            var targetLife = player.currentLife + restoreAmount;
+            if(targetLife > player.playerStatusData.Life) targetLife = player.playerStatusData.Life;
+            player.currentLife = targetLife;
             itemAudioHelper.PlayPickUpAudio();
             DestroyItem();
         }
