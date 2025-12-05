@@ -24,6 +24,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] BattleButtonManager battleButtonManager;
     [SerializeField] BattleStateManager battleStateManager;
     [SerializeField] ResultManager resultManager;
+    [SerializeField] PlayerHelper playerHelper;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -40,6 +41,7 @@ public class BattleManager : MonoBehaviour
         if (player == null) throw new System.Exception();
         var playerTra = player.transform;
 
+        playerHelper.Initialize();
         resultManager.Initialize(player);
         battleButtonManager.Initialize();
         battleStateManager.Initialize(player);
@@ -52,7 +54,8 @@ public class BattleManager : MonoBehaviour
         scoreManager.Initialize();
         battleIconManager.Initialize(player);
         ghostAliveCounter.Initialize();
-        if(!isTestOnly) await battleStartCounter.StartCountDown();
+         await battleStartCounter.StartCountDown();//if(!isTestOnly)
+        playerHelper.isSetUped = true;
         itemSpawner.IsSetUped = true;
         enemySpawner.IsSetUped = true;
         player.IsSetUped = true;

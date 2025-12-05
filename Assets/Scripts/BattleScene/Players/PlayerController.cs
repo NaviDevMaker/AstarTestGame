@@ -37,7 +37,7 @@ namespace Game.Player
         public PlayerDeathState _playerDeathState { get; private set;}
         public PlayerSpecialMoveState _playerSpecialMoveState {  get; private set; }
         public PlayerItemPickUpState _playerItemPickUpState { get; private set;}
-        PlayerStateMachineBase<PlayerController> currentState = null;
+        public PlayerStateMachineBase<PlayerController> currentState { get; private set; } = null;
 
         [SerializeField] AudioSources audioSources;
         [SerializeField] PlayerStatusData statusData;
