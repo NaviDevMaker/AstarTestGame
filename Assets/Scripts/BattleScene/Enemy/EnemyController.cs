@@ -41,6 +41,7 @@ namespace Game.Enemy
         public bool isDead { get; set; } = false;
         public EnemyActionHelper<EnemyController> enemyActionHelper { get; private set;}
         public EnemyAudioHelper<EnemyController> enemyAudioHelper { get; private set; }
+        TargetManager targetManager => TargetManager.Instance;
         void Start()
         {
             Initialize();
@@ -51,7 +52,8 @@ namespace Game.Enemy
         {
             stateMachine?.Update();
             if (isDead) return;
-            TargetManager.Instance.SetCurrentTarget(this);
+            targetManager.SetCurrentTarget(this);
+            targetManager.SetSpecialMoveTarget(this);
             enemyActionHelper?.ChangeVisible();
         }
         void Initialize()

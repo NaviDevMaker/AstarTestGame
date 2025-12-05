@@ -32,7 +32,7 @@ namespace Game.Player
         }
         public async UniTask Attack()
         {
-            if (isAttacking) return;
+            if (isAttacking || controller._playerSpecialMoveState.isSpecialAttacking) return;
             var token = controller.GetCancellationTokenOnDestroy();
             try
             {
@@ -51,16 +51,17 @@ namespace Game.Player
                 };
 
                 await UniTask.WaitUntil(waitAttackAnim, cancellationToken: token);
-                while(GetCurrentNormalizeTime() < attackbleNorTime && !controller.isDead)
+                while(GetCurrentNormalizeTime(layerIndex) < attackbleNorTime && !controller.isDead)
                 {
-                    Debug.Log($"{GetCurrentNormalizeTime()},{controller.currentTarget},UŒ‚ˆ—’†");
+                    Debug.Log($"{GetCurrentNormalizeTime(layerIndex)},{controller.currentTarget},UŒ‚ˆ—’†");
                     if(controller.currentTarget != null)
                     {
                         Debug.Log("taosu");
                         var currentTarget = controller.currentTarget;
                         EffectManager.Instance.hitEffect.SpawnHitEffect(currentTarget.owerObj);
                         currentTarget.OnDeadAction?.Invoke(currentTarget);
-                        controller.AddScoreAction?.Invoke(currentTarget);
+                        controller.enemyDestroyCount += 15;//controller.enemyDestroyCount++;
+                        controller.OnKillEnemyAction?.Invoke(currentTarget);
                         HitStopManager.Instance.HitStop(0.5f).Forget();
                         controller.currentTarget = null;
                         break;
@@ -68,7 +69,7 @@ namespace Game.Player
                     await UniTask.Yield(cancellationToken: token);
                 }
 
-                await UniTask.WaitUntil(() => GetCurrentNormalizeTime() >= 0.95f);
+                await UniTask.WaitUntil(() => GetCurrentNormalizeTime(layerIndex) >= 0.95f);
             }
             catch (OperationCanceledException){}
             finally
@@ -79,12 +80,7 @@ namespace Game.Player
             }
            
         }       
-        float GetCurrentNormalizeTime()
-        {
-            return controller.animator.GetCurrentAnimatorStateInfo(layerIndex).normalizedTime;
-            //var now = controller.animator.GetCurrentAnimatorStateInfo(layerIndex).normalizedTime;
-            //return now % 1;
-        }
+  
         async UniTask<float> GetAttackableNormalizeTime()
         {
             var clip = await controller.animationData.LoadClip(animationClipName);

@@ -8,12 +8,14 @@ public class AnimationData : ScriptableObject
     [SerializeField] string attackHashName;
     [SerializeField] string pickUpHashName;
     [SerializeField] string deathHashName;
+    [SerializeField] string specialMoveHashName;
 
     [Header("Clip Names")]
     [SerializeField] string walkClipName;
     [SerializeField] string attackClipName;
     [SerializeField] string pickUpClipName;
     [SerializeField] string deathClipName;
+    [SerializeField] string specialMoveClipName;
 
     [Header("Layers")]
     [SerializeField] int baseLayerIndex;
@@ -27,11 +29,13 @@ public class AnimationData : ScriptableObject
     public int PickUpHash => Animator.StringToHash(pickUpHashName);
     public int DeathHash => Animator.StringToHash(deathHashName);
 
+    public int SpecialMoveHash => Animator.StringToHash(specialMoveHashName);
     public string WalkClipName => walkClipName;
     public string AttackClipName  => attackClipName;
     public string PickUpClipName => pickUpClipName;
     public string DeathClipName => deathClipName;
 
+    public string SpecialMoveClipName => specialMoveClipName;
     public int BaseLayerIndex  => baseLayerIndex;
     public int AttackLayerIndex  => attackLayerIndex;
     public int PickUpLayerIndex => pickUpLayerIndex;

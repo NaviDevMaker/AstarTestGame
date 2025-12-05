@@ -29,7 +29,7 @@ public class TitleButtonManager : MonoBehaviour
         });
         var amount = 1.5f;
         var duration = 1.0f;
-        await UIActionHelper.UIScaleAction(duration,amount,new Graphic[] {huntButton.image,recordButton.image });
+        await UIActionHelper.UIScaleAction(duration,amount,graphics:new Graphic[] {huntButton.image,recordButton.image });
         huntButton.interactable = true;
         recordButton.interactable = true;
     }

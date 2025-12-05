@@ -19,5 +19,7 @@ MonoBehaviour:
   pickUpRadius: 2
   rotateSpeed: 15
   detectRange: 1.5
+  specialMoveRange: 10
   attackEndFrame: 15
   invincibleDuration: 2
+  specialMovableCount: 15

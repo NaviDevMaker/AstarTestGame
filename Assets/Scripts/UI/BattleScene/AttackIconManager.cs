@@ -41,16 +41,16 @@ namespace Game.Icon
             attackIconImage.color = newColor;
             attackText.color = newColor;
             var targetAmount = 1.0f;
-            var fillTween = DOTween.To(                
-                    () => attackIconImage.fillAmount,
-                    f => attackIconImage.fillAmount = f,
-                    targetAmount,
-                    animLength
-                ).SetUpdate(UpdateType.Normal,true)
-                .SetEase(Ease.Linear);
+            //var fillTween = DOTween.To(                
+            //        () => attackIconImage.fillAmount,
+            //        f => attackIconImage.fillAmount = f,
+            //        targetAmount,
+            //        animLength
+            //    ).SetUpdate(UpdateType.Normal,true)
+            //    .SetEase(Ease.Linear);
             try
             {
-                await fillTween.ToUniTask(cancellationToken: token);
+                await attackIconImage.GetFillTween(targetAmount,animLength).ToUniTask(cancellationToken: token);
                 await UniTask.WhenAll(GetScaleTask(new (Graphic,Vector3)[]{(attackIconImage,originalImageScale),
                                                                             (attackText,originalTextScale)}));
             }

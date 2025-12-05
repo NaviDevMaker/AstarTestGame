@@ -1,6 +1,7 @@
 using UnityEngine;
 using Game.Player;
 using Cysharp.Threading.Tasks;
+using UnityEngine.Video;
 
 namespace Game.Enemy
 {
@@ -11,6 +12,7 @@ namespace Game.Enemy
         {
             public PlayerController _player { get; set; }
             public float detectRange { get; set; }
+            public float specialMoveRange { get; set; } 
             public float thereHold { get; set; }
         }
         PlayerInfo playerInfo;
@@ -25,12 +27,18 @@ namespace Game.Enemy
             {
                 _player = this.player,
                 detectRange = player.playerStatusData.DetectRange,
+                specialMoveRange = player.playerStatusData.SpecialMoveRange,
                 thereHold = thereHold
             };
         }
         public void SetCurrentTarget(IEnemy targetEnemy)
         {
             var player = playerInfo._player;
+            if (targetEnemy == null || targetEnemy.owerObj == null)
+            {
+                if (targetEnemy == player.currentTarget) player.currentTarget = null;
+                return;
+            }
             var currentTarget = player.currentTarget;
             Debug.Log(IsTargetable(targetEnemy));
             if (!IsTargetable(targetEnemy))
@@ -58,6 +66,20 @@ namespace Game.Enemy
             else
             {
                 if (player.currentTarget == targetEnemy) player.currentTarget = null;
+            }
+        }
+        public void SetSpecialMoveTarget(IEnemy targetEnemy)
+        {
+            var playerPos = player.transform.position;
+            playerPos = GetFlatPosition(playerPos);
+            var enemyPos = targetEnemy.enemyCollider.ClosestPoint(playerPos);
+            enemyPos = GetFlatPosition(enemyPos);
+            var distance = Vector3.Distance(playerPos, enemyPos);
+            var targets = player.specialMoveTargets;
+            if (distance <= playerInfo.specialMoveRange) targets.Add(targetEnemy);
+            else
+            {
+                if(targets.Contains(targetEnemy)) player.specialMoveTargets.Remove(targetEnemy);
             }
         }
         bool IsTargetable(IEnemy enemy)

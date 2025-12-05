@@ -47,7 +47,7 @@ namespace Game.TextRenewer
         public void Initialize()
         {
             scoreText.text = currentScore.ToString();
-            player.AddScoreAction += AddScore;
+            player.OnKillEnemyAction += AddScore;
             originalScale = scoreText.transform.localScale;
         }
         void AddScore(IEnemy targetEnemy)

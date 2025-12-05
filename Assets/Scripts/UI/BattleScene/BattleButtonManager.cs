@@ -33,7 +33,8 @@ public class BattleButtonManager : MonoBehaviour
             await UniTask.Delay(TimeSpan.FromSeconds(waitTime),cancellationToken: this.GetCancellationTokenOnDestroy());
             var duration = 0.5f;
             var amount = 2.0f;
-            await UIActionHelper.UIScaleAction(duration, amount, new Graphic[] {titleButton.image, retryButton.image });
+            await UIActionHelper.UIScaleAction(duration, amount
+                                               ,graphics: new Graphic[] {titleButton.image, retryButton.image });
             titleButton.interactable = true;
             retryButton.interactable = true;
         }

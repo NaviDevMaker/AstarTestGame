@@ -20,6 +20,7 @@ namespace Game.Player
             Foot,
             Hitted,
             Attack,
+            SpecialMove,
             Death
         }
 
@@ -31,7 +32,7 @@ namespace Game.Player
 
         public void StopFootAudio() => footAudioSource.Stop();
         public void PlayHittedAudio() => sfxAudioSource.PlayOneShot(GetTargetAudioClip(PlayerAudioType.Hitted));
-
+        public void PlaySpecialMoveAudio() => sfxAudioSource.PlayOneShot(GetTargetAudioClip(PlayerAudioType.SpecialMove));
         public void PlayAttackAudio() => sfxAudioSource.PlayOneShot(GetTargetAudioClip(PlayerAudioType.Attack));
         public void PlayDeathAudio()
         {
@@ -45,6 +46,7 @@ namespace Game.Player
             {
                 PlayerAudioType.Foot => playerAudioDatas.FootAudio,
                 PlayerAudioType.Attack => playerAudioDatas.AttackAudio,
+                PlayerAudioType.SpecialMove => playerAudioDatas.SpecialMoveAudio,
                 PlayerAudioType.Hitted => playerAudioDatas.HittedAudio,
                 PlayerAudioType.Death => playerAudioDatas.DeathAudio,
                 _=> default

@@ -11,6 +11,7 @@ public static class InputManager
         return PressedKey.None;
     }
     public static bool AttackButtonPressed() => Input.GetMouseButtonDown(0);
+    public static bool SpecialMoveButtonPressed() => Input.GetMouseButtonDown(1);
     public static bool RecordUICloseButtonPressed() => Input.GetMouseButtonDown(0);
     public static bool PickUpItemButtonPressed() => Input.GetMouseButtonDown(2);
 }

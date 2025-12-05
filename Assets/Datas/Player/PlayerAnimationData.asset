@@ -16,10 +16,12 @@ MonoBehaviour:
   attackHashName: isAttacking
   pickUpHashName: isPickingItem
   deathHashName: isDead
+  specialMoveHashName: isSpecialMoving
   walkClipName: Walk
   attackClipName: Attack
   pickUpClipName: PickUpItem
   deathClipName: Death
+  specialMoveClipName: SpecialMove
   baseLayerIndex: 0
   attackLayerIndex: 1
   pickUpLayerIndex: 2

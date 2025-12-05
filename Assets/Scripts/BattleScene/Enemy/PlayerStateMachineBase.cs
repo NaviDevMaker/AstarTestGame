@@ -9,7 +9,6 @@ namespace Game.Player
             this.controller = controller;
             Initialize();
         }
-
         protected int animatorHash { get; private set; }
         protected string animationClipName { get; private set;}
 
@@ -28,9 +27,16 @@ namespace Game.Player
             this.stateSpeed = info.stateSpeed;
             this.animLength = rowLength / stateSpeed;
         }
+
         public abstract void OnEnter();
         public abstract void OnUpdate();
         public abstract void OnExit();
+        protected float GetCurrentNormalizeTime(int layerIndex)
+        {
+            return controller.animator.GetCurrentAnimatorStateInfo(layerIndex).normalizedTime;
+            //var now = controller.animator.GetCurrentAnimatorStateInfo(layerIndex).normalizedTime;
+            //return now % 1;
+        }
     }
 }
 

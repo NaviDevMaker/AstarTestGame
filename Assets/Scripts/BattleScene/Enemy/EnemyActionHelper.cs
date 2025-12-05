@@ -25,6 +25,7 @@ namespace Game.Enemy
             targetPlayer = PlayerController.instance;
             moveSpeed = owner._enemyStatusData.MoveSpeed;
             visibleDistBasedSqr = owner._enemyStatusData.VisibleDistBasedSqr;
+            owner.OnDeadAction += (_) => OnDead();
             GetAsset().Forget();
         }
 
@@ -82,6 +83,12 @@ namespace Game.Enemy
             }
             catch (OperationCanceledException) { throw; }
         }
+
+        void OnDead() 
+        {
+            if(targetPlayer.specialMoveTargets.Contains(owner)) targetPlayer.specialMoveTargets.Remove(owner);
+        }
+
         public async UniTask GetAsset()
         {
             actionFieldDatas = await GetAssetsMethods.GetAsset<EnemyActionFieldDatas>("Datas/Enemy/EnemyActionFieldData");
@@ -111,16 +118,17 @@ namespace Game.Enemy
         public async UniTask ChaseLooper(CancellationTokenSource chaseEndCts)
         {
 
-            var doubleCts = CancellationTokenSource.CreateLinkedTokenSource
+            var tripleCts = CancellationTokenSource.CreateLinkedTokenSource
                   (chaseEndCts.Token
-                   , targetPlayer.GetCancellationTokenOnDestroy());
+                   , targetPlayer.GetCancellationTokenOnDestroy()
+                   ,owner.GetCancellationTokenOnDestroy());
             try
             {
                 await UniTask.WaitUntil(() => actionFieldDatas != null
                                         , cancellationToken: token);
                 CancellationTokenSource moveCts = null;
                 var distBasedSqr = actionFieldDatas.DistBasedSqr;
-                while (!doubleCts.IsCancellationRequested)
+                while (!tripleCts.IsCancellationRequested)
                 {
                     // Åö ëOÇÃà⁄ìÆÇÉLÉÉÉìÉZÉã
                     moveCts?.Cancel();
@@ -154,7 +162,7 @@ namespace Game.Enemy
                             //if(isContinuable) isChangingPathes = true;
                             //return isChangingPathes;
                         },
-                        cancellationToken: doubleCts.Token
+                        cancellationToken: tripleCts.Token
                     );
                 }
             }

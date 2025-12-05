@@ -57,7 +57,7 @@ namespace Game.Item
                 {
                     var token = player.GetCancellationTokenOnDestroy();
                     var targetPos = GetTargetPos(player, moveInfo);
-                    while ((targetPos - owner.transform.position).magnitude > 0.1f)
+                    while ((targetPos - owner.transform.position).magnitude > 0.5f)
                     {
                         token.ThrowIfCancellationRequested();
                         myTokenCts.ThrowIfCancellationRequested();

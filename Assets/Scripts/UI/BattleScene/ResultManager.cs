@@ -21,13 +21,14 @@ public class ResultManager : MonoBehaviour
         var result = scoreManager.currentScore;
         resultText.text = result.ToString("D3");
         var duration = 2.0f;
-        var amount = 2.0f;
-        await UIActionHelper.UIScaleAction(duration,amount,resultText);
+        var firstAmount = 4.0f;
+        var finalAmount = 2.0f;
+        await UIActionHelper.UIScaleAction(duration,firstAmount, finalAmount,resultText);
         var gameManager = GameManager.Instance;
         var previousHighScore = gameManager.SaveController.LoadData().highScore;
         gameManager.SaveController.SaveData(result);
         if (previousHighScore >= result) return;
-        await UIActionHelper.UIScaleAction(duration,amount,newRecordText);
+        await UIActionHelper.UIScaleAction(duration,firstAmount,graphics:newRecordText);
         StartLoopAction().Forget();
     }
     async UniTask StartLoopAction()
