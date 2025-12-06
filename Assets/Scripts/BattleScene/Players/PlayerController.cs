@@ -24,7 +24,6 @@ namespace Game.Player
         static TPlayer instance { get;}//interface‚àstatic‚¢‚¯‚é‚ç‚µ‚¢
         PlayerAudioHelper audioHelper { get;}
         int enemyDestroyCount { get;set;}
-
         UnityAction OnInvokedSpecialMove { get; set;}
      }
     public class PlayerController : MonoBehaviour,IAssetSetter,IPlayer<PlayerController>,IDamageable,ISetUper
@@ -57,7 +56,6 @@ namespace Game.Player
         public UnityAction<IEnemy> OnKillEnemyAction { get; set; }
         public PlayerAudioDatas AudioDatas => audioDatas;
         public PlayerAudioHelper audioHelper { get; private set; }
-
         public static PlayerController instance { get; private set; }
         public Func<float, UniTask> OnAttackingAction { get; set; }
         public bool IsSetUped { get; set; } = false;

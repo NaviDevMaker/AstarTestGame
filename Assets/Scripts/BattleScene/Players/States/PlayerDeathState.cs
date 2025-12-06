@@ -18,7 +18,7 @@ namespace Game.Player
         async UniTask DownAction()
         {
             var layerIndex = controller.animationData.BaseLayerIndex;
-            var amount = 1.2f;
+            var amount = 0.5f;
             var downOffset = Vector3.down * amount;
             var token = controller.GetCancellationTokenOnDestroy();
             var animator = controller.animator;

@@ -22,16 +22,30 @@ namespace Game.Stage
                var xBase = 0;
                var yBase = 0;
                int[,] detailLayer = data.GetDetailLayer(xBase, yBase, detailResolution, detailResolution, 0);
-                
-               for (int x = 0; x < size.x; x++)
-               {
-                  for (int y = 0; y < size.y; y++)
-                  {
-                      if (!isSpawnable(x, y, mapSizeW, mapSizeH, defaultPos)) continue;
-                      SetDetailLayer(size,x, y,detailResolution,detailLayer);
-                  }
-                
-               }
+
+            for (int x = 0; x < size.x; x++)
+            {
+                for (int y = 0; y < size.y; y++)
+                {
+                    if (!isSpawnable(x, y, mapSizeW, mapSizeH, defaultPos)) continue;
+                    SetDetailLayer(size, x, y, detailResolution, detailLayer);
+                }
+
+            }
+            // detailResolutionでループする
+            //for (int detailY = 0; detailY < detailResolution; detailY++)
+            //{
+            //    for (int detailX = 0; detailX < detailResolution; detailX++)
+            //    {
+            //        detail座標をワールド座標に変換してチェック
+            //        float worldX = ((float)detailX / detailResolution) * size.x;
+            //        float worldZ = ((float)detailY / detailResolution) * size.z;
+
+            //        if (!isSpawnable((int)worldX, (int)worldZ, mapSizeW, mapSizeH, defaultPos)) continue;
+
+            //        detailLayer[detailY, detailX] = dentity;
+            //    }
+            //}
 
             Debug.Log($"DetailLaterのlength,{detailLayer.GetLength(0)}");
                data.SetDetailLayer(xBase, yBase, 0, detailLayer);
@@ -51,8 +65,6 @@ namespace Game.Stage
         void SetDetailLayer(Vector3 size,int worldX,int worldY
                            ,int detailResolution, int[,] detailLayer)
         {
-            //本当によくない、忘れてた感覚、掛け算の本質はその掛ける数側の基準に掛けられる数を合わせるためね
-            //だから草マップ基準に替えたいからdetailResolutionをかける
             //ちなみに草マップは正方形ね
             //切り上げね
             var detailX = Mathf.FloorToInt(((float)worldX / size.x) * detailResolution);
@@ -76,7 +88,6 @@ namespace Game.Stage
             var mapSizeEndY = dflY + mapSizeH;
             var mapSizeEndW = dflX + mapSizeW;
             if (y < dflY || y > mapSizeEndY) return true;
-            //yはマップの大きさ内の中での判定になる、だから見るのはxだけ
             if (x < dflX || x > mapSizeEndW) return true;
             return false;
         }

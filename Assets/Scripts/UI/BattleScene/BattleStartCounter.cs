@@ -16,7 +16,7 @@ namespace Game.TextRenewer
             if (countDownText == null) return;
             countDownText.text = startCount.ToString();
             countDownText.transform.localScale = Vector3.zero;
-            Func<UniTask> scaleTask = async () =>
+            Func<Vector3, UniTask> scaleTask = async (targetScale) =>
             {
                 var scaleUpSet = new Vector3TweenSetup(targetScale, 1f);
                 await countDownText.gameObject.Scaler(scaleUpSet);
@@ -25,9 +25,13 @@ namespace Game.TextRenewer
             for (int i = startCount - 1; i >= 0; i--)
             {
                 AudioManager.Instance.PlayCountDownSE(i == 0);
-                await scaleTask();
+                await scaleTask(targetScale);
                 countDownText.text = (--startCount).ToString();
-                if (i == 0) scaleTask().Forget();
+                if (i == 0)
+                {
+                    var finalTargetScale = Vector3.one * 130f;
+                    scaleTask(finalTargetScale).Forget();
+                }
             }
         }
     }

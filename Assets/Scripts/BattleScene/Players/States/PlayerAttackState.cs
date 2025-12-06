@@ -60,7 +60,7 @@ namespace Game.Player
                         var currentTarget = controller.currentTarget;
                         EffectManager.Instance.hitEffect.SpawnHitEffect(currentTarget.owerObj);
                         currentTarget.OnDeadAction?.Invoke(currentTarget);
-                        controller.enemyDestroyCount += 15;//controller.enemyDestroyCount++;
+                        controller.enemyDestroyCount ++;//controller.enemyDestroyCount++;
                         controller.OnKillEnemyAction?.Invoke(currentTarget);
                         HitStopManager.Instance.HitStop(0.5f).Forget();
                         controller.currentTarget = null;

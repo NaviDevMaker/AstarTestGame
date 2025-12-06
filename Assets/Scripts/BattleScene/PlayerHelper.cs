@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
+using NUnit.Framework.Constraints;
+using Unity.VisualScripting;
 
 namespace Game.Player
 {
@@ -11,13 +14,14 @@ namespace Game.Player
     {
         [SerializeField] PlayerController player;
         [SerializeField] GameObject helpArrowPrefab;
-        [SerializeField] GameObject helpUIPrefab;
+        //[SerializeField] GameObject helpUIPrefab;
 
-        const float appearSeconds = 2.0f;
+        const float appearSeconds = 5.0f;
         float elapsedTime = 0f;
         public bool isSetUped { get; set; } = false;
         bool isHelping = false;
         readonly List<(GameObject arrow,Material mat)> pairs = new List<(GameObject arrow,Material mat)>();
+        readonly List<Text> texts = new List<Text>();
         readonly List<Tween> currentTweens = new List<Tween>();
         const float duration = 1.5f;
         const float offsetY = 10.0f;
@@ -64,18 +68,39 @@ namespace Game.Player
                 var pos = values.pos;
                 var rot = values.rot;
                 var arrow = Instantiate(helpArrowPrefab, pos, rot, arrowParent.transform);
+                var helpUI = arrow.transform.GetChild(0).gameObject;
+                SetupHelpUI(helpUI,values.keyName);
                 var mat = arrow.GetComponentInChildren<MeshRenderer>().material;
                 pairs.Add((arrow,mat));
-                var newColor = mat.color;
-                newColor.a = 0f;
-                mat.color = newColor;
+                mat.color = GetTransparentColor(mat.color);
             }
         }
-        void SetupHelpUI(MeshRenderer renderer,string keyName)
+        Color GetTransparentColor(Color color)
         {
-            var rawSize = renderer.GetComponent<MeshFilter>().sharedMesh.bounds.size;
-            var boundsSize = Vector3.Scale(rawSize, renderer.transform.lossyScale);
-            var z = boundsSize.z;
+            var newColor = color;
+            newColor.a = 0f;
+            return newColor;
+        }
+        void SetupHelpUI(GameObject helpUIObj,string keyName)
+        {
+            ////sharedMesh‚©‚ç‚µ‚©‘f‚ÌƒTƒCƒY‚Æ‚ê‚È‚¢‚©‚ç‚»‚±‚æ‚ë‚µ‚­
+            //var rawSize = renderer.GetComponent<MeshFilter>().sharedMesh.bounds.size;
+            //var boundsSize = Vector3.Scale(rawSize,parent.lossyScale);
+            //var z = boundsSize.z;
+            ////Debug.Log($"Bounds‚ÌZ:{z},Foward:{parent.forward},Pos:{pos}");
+            //var ui = Instantiate(helpUIPrefab);
+            //ui.transform.SetParent(parent);
+            //var localPos = Vector3.zero + Vector3.right * z;
+            //var rot = helpArrowPrefab.transform.rotation;
+            //ui.transform.rotation = rot;
+            //ui.transform.localPosition = localPos;
+             helpUIObj.transform.rotation = Quaternion.identity;
+             var text = helpUIObj.GetComponentInChildren<Text>();
+             text.text = keyName;
+             var newColor = text.color;
+             newColor.a = 0f;
+             text.color = newColor;
+             texts.Add(text);
         }
         void StartHelpAction()
         {
@@ -99,6 +124,12 @@ namespace Game.Player
                 );
                 currentTweens.Add(tween);
             });
+
+            texts.ForEach(text =>
+            {
+                var tween = text.Fader(new FadeSet(targetAlpha, duration));
+                currentTweens.Add(tween);
+            });
         }
         void HelpClose()
         {
@@ -108,11 +139,10 @@ namespace Game.Player
             currentTweens.ForEach(tween => { tween?.Kill();});
             pairs.ForEach(pair =>
             {
-                var newColor = pair.mat.color;
-                newColor.a = 0f;
-                pair.mat.color = newColor;
+                pair.mat.color = GetTransparentColor(pair.mat.color);
                 pair.arrow.SetActive(false);
             });
+            texts.ForEach(text => text.color = GetTransparentColor(text.color));
             currentTweens.Clear();
             currentTweens.TrimExcess();
         }
