@@ -23,6 +23,8 @@ Shader "Custom/FogEffect"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
             
+            TEXTURE2D_X(_BlitTexture);
+
             TEXTURE2D_X(_CameraDepthTexture);
             SAMPLER(sampler_CameraDepthTexture);
             
@@ -58,9 +60,11 @@ Shader "Custom/FogEffect"
                 // UV座標を計算
                 output.texcoord = float2((input.vertexID == 1) ? 2.0 : 0.0, (input.vertexID == 2) ? 2.0 : 0.0);
                 
-                #if UNITY_UV_STARTS_AT_TOP
-                output.texcoord.y = 1.0 - output.texcoord.y;
-                #endif
+                //OpenGL と DirectX の UVの上下差を吸収するための処理なんだけど、
+                //URP + Blitter + _BlitTexture の組み合わせではこのフリップが「二重に適用される」ことがあるらしいから今回消す
+                // #if UNITY_UV_STARTS_AT_TOP
+                // output.texcoord.y = 1.0 - output.texcoord.y;
+                // #endif
                 
                 return output;
             }

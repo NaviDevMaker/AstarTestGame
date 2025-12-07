@@ -3,65 +3,29 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 public class FogFeature : ScriptableRendererFeature
-{
-    class FogPass : ScriptableRenderPass
-    {
-        public Material material;
+{ 
 
-        RTHandle source;
-        RTHandle destination;
-
-        public FogPass(Material mat)
-        {
-            material = mat;
-            renderPassEvent = RenderPassEvent.AfterRenderingTransparents;
-        }
-
-        public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
-        {
-            // 最新API
-            var renderer = renderingData.cameraData.renderer;
-            source = renderer.cameraColorTargetHandle;
-
-            // 一時RT確保
-            RenderingUtils.ReAllocateIfNeeded(
-                ref destination,
-                renderingData.cameraData.cameraTargetDescriptor,
-                FilterMode.Point,
-                TextureWrapMode.Clamp,
-                name: "_FogTempTex"
-            );
-        }
-
-        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
-        {
-            var cmd = CommandBufferPool.Get("FogPass");
-            Debug.Log("FogPass Execute");  // ★追加：1フレーム毎にログが出れば実行されてる
-            // ↓ URP公式推奨のBlitter
-            Blitter.BlitCameraTexture(cmd, source, destination, material, 0);
-            Blitter.BlitCameraTexture(cmd, destination, source);
-
-            context.ExecuteCommandBuffer(cmd);
-            CommandBufferPool.Release(cmd);
-        }
-
-        public override void OnCameraCleanup(CommandBuffer cmd)
-        {
-            destination?.Release();
-        }
-    }
-
-    public Material fogMaterial;
+    [SerializeField] Material fogMaterial;
+    public Material runTimeMat { get; private set; }
     FogPass pass;
-
+    //RendererFeature が初期化された時に “1回だけ” 呼ばれる関数
     public override void Create()
     {
-        pass = new FogPass(fogMaterial);
+        runTimeMat = new Material(fogMaterial);
+        pass = new FogPass(runTimeMat);
     }
 
+    //このフレーム・このカメラに、FogPass を追加するかどうかを決める関数」
+    //毎フレーム、それぞれのカメラをチェックしてる,だからcameraに入るカメラは毎回一つ
+    //この関数は毎フレームカメラの数だけ実行される
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
         var camera = renderingData.cameraData.camera;
-        if(camera.TryGetComponent<FogCameraMaker>(out var _)) renderer.EnqueuePass(pass);
+        if (camera.TryGetComponent<FogCameraMaker>(out var _))
+        {
+            //このフレームのレンダリングパイプラインに FogPass を差し込む
+            //この 1 行で：今フレーム,このカメラ,このレンダリング順序で,FogPass が実行されることが確定
+            renderer.EnqueuePass(pass);
+        }
     }
 }

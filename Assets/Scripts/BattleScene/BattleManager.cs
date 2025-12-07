@@ -25,6 +25,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] BattleStateManager battleStateManager;
     [SerializeField] ResultManager resultManager;
     [SerializeField] PlayerHelper playerHelper;
+    [SerializeField] FogController fogController;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -54,6 +55,7 @@ public class BattleManager : MonoBehaviour
         scoreManager.Initialize();
         battleIconManager.Initialize(player);
         ghostAliveCounter.Initialize();
+        fogController.Initialize(player);
          await battleStartCounter.StartCountDown();//if(!isTestOnly)
         playerHelper.isSetUped = true;
         itemSpawner.IsSetUped = true;

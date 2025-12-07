@@ -1504,7 +1504,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2442976788242782640, guid: 6b61a9fb178ab404282d158742f6c00a, type: 3}
       propertyPath: m_RendererIndex
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2442976788242782640, guid: 6b61a9fb178ab404282d158742f6c00a, type: 3}
       propertyPath: m_RequiresDepthTextureOption
@@ -2414,6 +2414,51 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1992009768}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1064854182
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1064854184}
+  - component: {fileID: 1064854183}
+  m_Layer: 0
+  m_Name: FogController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1064854183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064854182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33ed38da0045ded4abc540c210f0661c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fogFeature: {fileID: 8918414387911899494, guid: 8175a75cf43237b4a928c5cad5122a2f, type: 2}
+--- !u!4 &1064854184
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064854182}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.010000229, y: 1.5139999, z: 0.045000076}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1330106341
 GameObject:
@@ -3773,6 +3818,7 @@ MonoBehaviour:
   battleStateManager: {fileID: 1054126475}
   resultManager: {fileID: 375060028}
   playerHelper: {fileID: 380554345}
+  fogController: {fileID: 1064854183}
 --- !u!4 &1992009768
 Transform:
   m_ObjectHideFlags: 0
@@ -4142,3 +4188,4 @@ SceneRoots:
   - {fileID: 1642073525}
   - {fileID: 380554346}
   - {fileID: 1937480238}
+  - {fileID: 1064854184}
